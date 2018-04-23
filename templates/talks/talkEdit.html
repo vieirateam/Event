@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <h2 class="w3-center">{{ new|default:"Nova" }} Palestra</h2>
+    <hr>
+    <div class="w3-container">
+        <div class="w3-content" style="max-width: 800px">
+            <form method="POST" class="w3-white">
+                {% csrf_token %}
+                <div class="w3-section">
+                    <select class="w3-select" id="id_eventId" name="eventId" required autofocus>
+                        {% if not new %}
+                            <option value="" disabled selected>Selecione um evento</option>
+                        {% endif %}
+                        {% for event in events %}
+                            {% if event.id == form.eventId.value %}
+                                <option value="{{ forloop.counter }}" selected>
+                                    {{ event.eventName }}
+                                </option>
+                            {% else %}
+                                <option value="{{ forloop.counter }}">
+                                    {{ event.eventName }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="w3-section">
+                    <label for="id_speakerId">Palestrante(s)</label>
+                    <select class="w3-input" id="id_speakerId" name="speakerId" multiple="multiple" required>
+                        {% for speaker in speakers %}
+                            {% if speaker.id in form.speakerId.value %}
+                                <option value="{{ forloop.counter }}" selected>
+                                    {{ speaker.speakerName }}
+                                </option>
+                            {% else %}
+                                <option value="{{ forloop.counter }}">
+                                    {{ speaker.speakerName }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="w3-section">
+                    <input class="w3-input" type="text" id="id_talkName" name="talkName" value="{{ form.talkName.value|default_if_none:'' }}" placeholder="Nome da Palestra" maxlength="300" required />
+                </div>
+
+                <div class="w3-section">
+                    <textarea class="w3-input" type="text" id="id_talkDesc" name="talkDesc" placeholder="Descrição" rows="10" cols="40" required>{{ form.talkDesc.value|default_if_none:'' }}</textarea>
+                </div>
+
+                <div class="w3-section">
+                    <input class="w3-input" type="text" id="id_talkLocation" name="talkLocation" value="{{ form.talkLocation.value|default_if_none:'' }}" placeholder="Local" required maxlength="300" />
+                </div>
+
+                <div class="w3-section">
+                    <div class="w3-half">
+                        <label for="id_talkType">Tipo</label>
+                        <input class="w3-input" type="text" id="id_talkType" name="talkType" value="{{ form.talkType.value|default_if_none:'' }}" maxlength="300" required autofocus />
+                    </div>
+                    <div class="w3-half">
+                        <label for="id_talkMaxPeople">Vagas</label>
+                        <input class="w3-input" type="number" id="id_talkMaxPeople" name="talkMaxPeople" value="{{ form.talkMaxPeople.value|default_if_none:'' }}" min="0" required />
+                    </div>
+                </div>
+
+                <div class="w3-section">
+                    <div class="w3-third">
+                        <label for="id_talkDate">Data</label>
+                        <input class="w3-input" type="date" id="id_talkDate" name="talkDate" value="{{ form.talkDate.value|date:'c'|default_if_none:'' }}" required />
+                    </div>
+                    <div class="w3-third">
+                        <label for="id_talkStartTime">Horário Inicial:</label>
+                        <input class="w3-input" type="time" id="id_talkStartTime" name="talkStartTime" value="{{ form.talkStartTime.value|default_if_none:'' }}" required />
+                    </div>
+                    <div class="w3-third">
+                        <label for="id_talkFinishTime">Horário Final:</label>
+                        <input class="w3-input" type="time" id="id_talkFinishTime" name="talkFinishTime" value="{{ form.talkFinishTime.value|default_if_none:'' }}" required />
+                    </div>
+                </div>
+
+                <div class="w3-section w3-center">
+                    {% if not new %}
+                        <div class="w3-half">
+                            <button type="reset" class="w3-button w3-light-grey w3-margin-top w3-margin-bottom almost-full">Limpar</button>
+                        </div>
+                        <div class="w3-half">
+                            <button class="w3-button w3-green w3-margin-bottom w3-margin-top almost-full" type="submit">Salvar</button>
+                        </div>
+                    {% else %}
+                        <button class="w3-button w3-green w3-margin-top" style="width: 60%" type="submit">Salvar</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

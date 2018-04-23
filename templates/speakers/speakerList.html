@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="w3-container w3-center">
+    <h2>Palestrantes</h2>
+    <hr>
+    <div class="w3-row">
+        {% for speaker in speakers %}
+            {% if speaker.speakerName != "(Sem nome)" and speaker.speakerApproved or user.is_superuser %}               
+                <div class="w3-quarter">
+                    <a href="{% url 'speakerDetail' pk=speaker.pk %}">
+                        {% if speaker.speakerImage.url != null %}
+                            <img src="{{ speaker.speakerImage.url }}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.speakerName }}">
+                        {% else %}
+                            <img src="{% static 'images/speaker.png' %}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.speakerName }}">
+                        {% endif %}
+                    </a>
+                        <h5>{{ speaker.speakerName }}</h5>
+                    
+                </div>
+            {% endif%}
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}

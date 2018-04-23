@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <h2 class="w3-center">{{ new|default:"Novo" }} Evento</h2>
+    <hr>
+    <div class="w3-container">
+        <div class="w3-content" style="max-width: 800px">
+            <form method="POST" enctype="multipart/form-data" class="w3-white">
+                {% csrf_token %}
+                
+                <div class="w3-section">
+                    <input class="w3-input" type="text" id="id_eventName" name="eventName" value="{{ form.eventName.value|default_if_none:'' }}" placeholder="Nome do Evento" maxlength="300" required autofocus>
+                </div>
+
+                <div class="w3-section">
+                    <textarea class="w3-input" type="text" id="id_eventDesc" name="eventDesc" placeholder="Descrição" rows="10" cols="40" required>{{ form.eventDesc.value|default_if_none:'' }}</textarea>
+                </div>
+                
+                <div class="w3-section">
+                    <div class="w3-half">
+                        <label>Data de Abertura</label>
+                        <input class="w3-input" type="date" id="id_eventStartDate" name="eventStartDate" value="{{ form.eventStartDate.value|date:'c'|default_if_none:'' }}" required>
+                    </div>
+                    <div class="w3-half">
+                        <label>Data de Encerramento</label>
+                        <input class="w3-input" type="date" id="id_eventFinishDate" name="eventFinishDate" value="{{ form.eventFinishDate.value|date:'c'|default_if_none:'' }}" required>
+                    </div>
+                </div>
+
+                <div class="w3-section">
+                    <div class="w3-content w3-center" style="max-width: 200px">
+                        <div id="image-modal" class="w3-modal" onclick="this.style.display='none'">
+                            <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+                            <div class="w3-modal-content w3-animate-zoom">
+                                <img id="event-image" class="full-width full-height">
+                            </div>
+                        </div>
+
+                        {% if form.eventImage.value.url != null %}
+                            <img class="w3-hover-opacity w3-margin-top preview-image" src="{{ form.eventImage.value.url }}" alt="{{ form.eventName.value }}" title="{{ form.eventName.value }}" onclick="onClick(this)">
+                        {% else %}
+                            <img class="w3-hover-opacity w3-margin-top preview-image" src="{% static 'images/event.png' %}" class="full-width" onclick="onClick(this)">
+                        {% endif %}
+
+                        <div id="alert-display" class="w3-panel w3-pale-red w3-display-container" style="display:none">
+                            <span onclick="this.parentElement.style.display='none'"
+                            class="w3-button w3-pale-red w3-large w3-display-topright">&times;</span>
+                            <h3>Ops!</h3>
+                            <p id="error"></p>
+                        </div>
+
+                        <label for="id_eventImage" class="w3-button w3-light-grey w3-margin-top">Alterar imagem</label>
+                        <input class="image-input" type="file" id="id_eventImage" name="eventImage" accept=".jpg, .jpeg, .png">
+                    </div>
+                </div>
+
+                <div class="w3-section w3-center">
+                    {% if not new %}
+                        <div class="w3-half">
+                            <button type="reset" class="w3-button w3-light-grey almost-full">Limpar</button>
+                        </div>
+                        <div class="w3-half">
+                            <button class="w3-button w3-green w3-margin-bottom almost-full" type="submit">Salvar</button>
+                        </div>
+                    {% else %}
+                        <button class="w3-button w3-green" style="width: 60%" type="submit">Salvar</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="{% static 'js/image-file.js' %}"></script>
+{% endblock %}

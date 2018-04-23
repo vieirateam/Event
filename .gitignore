@@ -1,0 +1,8 @@
+.directory
+*.pyc
+*~
+__pycache__
+myvenv
+venv
+media
+.DS_Store

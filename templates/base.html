@@ -1,0 +1,74 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+   
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <title>IFSC Manage Eventos</title>
+    </head>
+    
+    <body>
+    	<!-- navigation -->
+
+		<div class="w3-bar w3-light-grey w3-border w3-large">
+			
+            <a href="/" class="w3-bar-item w3-button w3-green" title="Home"><i class="fa fa-home"></i></a>
+			
+            <a href="{% url 'eventList' %}" class="w3-bar-item w3-button" title="Eventos">Eventos</a>
+            
+            <a href="{% url 'speakerList' %}" class="w3-bar-item w3-button" title="Palestrantes">Palestrantes</a>
+			
+            <a href="#" class="w3-bar-item w3-button" title="Sobre">Sobre</a>
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'logout' %}" class="w3-bar-item w3-button w3-right" title="Logout"><i class="fa fa-sign-out"></i> Logout</a>
+
+                <div class="w3-dropdown-hover w3-right">
+                    
+                    {% if user.is_superuser %}
+
+                        <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i> {{ user.username }}</a>
+
+                        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                            <a href="{% url 'eventNew' %}" class="w3-bar-item w3-button w3-right" title="Novo Evento"><i class="fa fa-plus-square"></i> Novo Evento</a>
+
+                            <a href="{% url 'talkNew' %}" class="w3-bar-item w3-button w3-right" title="Novo Evento"><i class="fa fa-plus-square"></i> Nova Palestra</a>
+                        </div>
+
+                    {% else %}
+
+                        <a href="{% url 'speakerDetail' user.id %}" class="w3-bar-item w3-button" title="Perfil do Palestrante"><i class="fa fa-user"></i> {{ user.username }}</a>
+
+                    {% endif %}
+
+                </div>
+
+            {% else %}
+    			<a href="{% url 'login' %}" class="w3-bar-item w3-button w3-right" title="Login"><i class="fa fa-sign-in"></i> Login</a>
+			{% endif %}
+            
+            <a href="" class="w3-bar-item w3-button w3-right" title="Pesquisar"><i class="fa fa-search"></i></a>
+			<input type="text" class="w3-bar-item w3-input w3-right" placeholder="Pesquisar...">
+		</div>
+
+        {% block content %}
+        {% endblock %}      
+		
+		<!-- footer -->
+
+		<footer class="w3-center w3-light-grey w3-border w3-large w3-padding-16">
+			<a href="" class="w3-button w3-green">
+				<i class="fa fa-arrow-up w3-margin-right"></i>Voltar ao topo
+			</a>
+			<p>Desenvolvido por <a href="https://github.com/vieirateam" target="_blank">vieirateam</a></p>
+		</footer>  
+		
+        <script type="text/javascript" src="{% static 'js/global.js' %}"></script>
+    </body>
+</html>

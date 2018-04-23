@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <h2 class="w3-center">Eventos</h2>
+    <hr>
+    <div class="w3-row-padding">
+        {% for event in events %}
+            <div class="w3-quarter w3-margin-bottom">
+                <div class="w3-card-4">
+                    <a href="{% url 'eventDetail' pk=event.pk %}">
+                        {% if event.eventImage.url != null %}
+                           <img src="{{ event.eventImage.url }}" alt="{{event.eventName}}" class="w3-hover-opacity img-events full-width" title="{{event.eventName}}">
+                       {% else %}
+                            <img src="{% static 'images/event.png' %}" alt="{{event.eventName}}" class="w3-hover-opacity img-events full-width" title="{{event.eventName}}">
+                       {% endif %}  
+                    </a>
+                    <div class="w3-container w3-center">
+                        <h3>{{ event.eventName }}</h3>
+                        <p>De {{ event.eventStartDate }} a {{ event.eventFinishDate }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

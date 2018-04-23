@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="talk-container">
+        <div class="w3-row">
+            <div class="w3-quarter">
+                <div class="w3-card-4 w3-margin">
+                    {% if talk.eventId.eventImage.url != null %}   
+                        <img src="{{ talk.eventId.eventImage.url }}" alt="{{ talk.eventId.eventName }}" title="{{ talk.eventId.eventName }}" class="full-width">
+                    {% else %}
+                        <img src="{% static 'images/event.png' %}" alt="{{ talk.eventId.eventName }}" title="{{ talk.eventId.eventName }}" class="full-width">
+                    {% endif %}
+                    <div class="w3-container">
+                        <a href="{% url 'eventDetail' pk=talk.eventId.pk %}" class="link-decoration"><h4>{{ talk.eventId.eventName }} &nbsp;<i class="fa fa-external-link"></i></h4></a>
+                        <p title="Tipo"><i class="fa fa-calendar-check-o"></i> &nbsp; {{ talk.talkType }}</p>
+                        <p title="Vagas"><i class="fa fa-group"></i> &nbsp; {{ talk.talkMaxPeople }} pessoas</p>
+                        <p title="Local"><i class="fa fa-map"></i> &nbsp; {{ talk.talkLocation }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-twothird">
+                <div class="w3-container w3-card-4 w3-margin">
+                    <h4>
+                        {{ talk.talkName }}
+                        {% if userIsParticipant or user.is_superuser %}
+                            <a href="{% url 'talkEdit' pk=talk.pk %}"><i class="fa fa-pencil w3-right" title="Editar"></i></a>
+                        {% endif %}
+                        
+                        {% if user.is_superuser %}
+                            <i class="fa fa-trash w3-margin-right w3-right" title="Remover" onclick="document.getElementById('remove-dialog').style.display='block'"></i>
+                            <div id="remove-dialog" class="w3-modal">
+                                <div class="w3-modal-content w3-animate-zoom" style="max-width:600px">
+                                    <header class="w3-container"> 
+                                        <span onclick="document.getElementById('remove-dialog').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                                    </header>
+                                    <div class="w3-container">
+                                        <p>Tem certeza que deseja excluir {{ talk.talkType }} "{{ talk.talkName }}"?</p>
+                                    </div>
+                                    <footer class="w3-container w3-padding-16">
+                                        <button class="w3-button w3-green w3-right" onclick="document.getElementById('remove-dialog').style.display='none'">Cancelar</button>
+                                        <a class="w3-button w3-right w3-margin-right w3-red" href="{% url 'talkRemove' pk=talk.pk %}" title="Remover">Remover</a>
+                                    </footer>
+                                </div>
+                            </div>
+                            
+                            {% if not talk.talkApproved %}
+                                <a href="{% url 'talkApprove' pk=talk.pk %}"><i class="fa fa-check w3-margin-right w3-right" title="Aprovar"></i></a>
+                            {% endif %}
+                        {% endif %}
+                    </h4>
+                    <h6 class="w3-opacity">Em {{ talk.talkDate }}, início às {{ talk.talkStartTime }} e término às {{ talk.talkFinishTime }}</h6>
+                    <hr class="w3-clear">
+                    <p>{{ talk.talkDesc|linebreaksbr }}</p>
+                </div>
+
+                <div class="w3-container w3-card-4 w3-margin">
+                    <h4>Palestrante(s)</h4>
+                    <hr class="w3-clear">
+                    {% for speaker in talk.speakerId.all %}
+                        <div class="w3-quarter w3-center min-full-width">
+                            <a href="{% url 'speakerDetail' pk=speaker.pk %}">
+                                {% if speaker.speakerImage.url != null %}
+                                    <img src="{{ speaker.speakerImage.url }}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.speakerName }}">
+                                {% else %}
+                                    <img src="{% static 'images/speaker.png' %}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.speakerName }}">
+                                {% endif %}
+                            </a>
+                            <h6 class="w3-opacity">
+                                {{ speaker.speakerName }}
+                            </h6>
+                        </div>
+                    {% empty %}
+                        <p>Não há palestrante!?</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
