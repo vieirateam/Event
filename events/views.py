@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from django.utils import timezone
 from .models import Event, Talk
@@ -8,9 +8,21 @@ from . import allobjects
 from .forms import EventForm, TalkForm, ContactForm
 
 def home(request):
-    emailForm = ContactForm()
-    objectsList = allobjects.getAllObjects()
-    nextEvents = Event.objects.all().order_by('eventStartDate')[:4]
+    if request.method == 'GET':
+        objectsList = allobjects.getAllObjects()
+        nextEvents = Event.objects.all().order_by('eventStartDate')[:4]
+        emailForm = ContactForm()
+    else:
+        emailForm = ContactForm(request.POST)
+        if emailForm.is_valid():
+            email = emailForm.cleaned_data['email']
+            subject = emailForm.cleaned_data['subject']
+            message = emailForm.cleaned_data['message']
+            try:
+                send_mail(subject, message, email, ['vieirateam.contact@gmail.com'])
+            except BadHeaderError:
+                return HttpResponse("Erro =/")
+        return redirect('home')
     return render(request, 'index.html', {'form': emailForm, 'list': objectsList, 'nextEvents': nextEvents}) 
 
 def pendencyList(request):
@@ -132,19 +144,3 @@ def talkApprove(request, pk):
     talk = get_object_or_404(Talk, pk=pk)
     talk.approve()
     return redirect('talkDetail', pk=talk.pk)
-
-def contact(request):
-    if request.method == 'GET':
-        emailForm = ContactForm()
-    else:
-        emailForm = ContactForm(request.POST)
-        if emailForm.is_valid():
-            email = emailForm.cleaned_data['email']
-            subject = emailForm.cleaned_data['subject']
-            message = emailForm.cleaned_data['message']
-            try:
-                send_mail(subject, message, email, ['vieirateam.contact@gmail.com'])
-            except BadHeaderError:
-                return HttpResponse("Erro =/")
-        return redirect('home')
-    return render(request, 'index.html', {'form': emailForm})
