@@ -93,6 +93,7 @@ def talkDetail(request, pk):
 
 @login_required
 def talkNew(request):
+    events = Event.objects.all()
     if request.method == "POST":
         form = TalkForm(request.POST)
         if form.is_valid():
@@ -102,7 +103,6 @@ def talkNew(request):
             return redirect('talkDetail', pk=talk.pk)
     else:
         objectsList = allobjects.getAllObjects()
-        events = Event.objects.all()
         speakers = Speaker.objects.filter(speakerApproved=True)
         form = TalkForm()
     return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'list': objectsList})
