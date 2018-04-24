@@ -3,21 +3,25 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from events import allobjects
 from django.utils import timezone
 from .models import Speaker
 from .forms import SpeakerForm
 
 def speakerList(request):
+    objectsList = allobjects.getAllObjects()
     speakers = Speaker.objects.all().order_by('speakerName')
-    return render(request, 'speakers/speakerList.html', {'speakers': speakers})
+    return render(request, 'speakers/speakerList.html', {'speakers': speakers, 'list': objectsList})
 
 def speakerDetail(request, pk):
 	speaker = get_object_or_404(Speaker, pk=pk)
-	return render(request, 'speakers/speakerDetail.html', {'speaker': speaker})
+	objectsList = allobjects.getAllObjects()
+	return render(request, 'speakers/speakerDetail.html', {'speaker': speaker, 'list': objectsList})
 
 @login_required
 def speakerEdit(request, pk):
     speaker = get_object_or_404(Speaker, pk=pk)
+    objectsList = allobjects.getAllObjects()
     if speaker.id != request.user.id:
     	return redirect('speakerDetail', pk=speaker.pk)
     if request.method == "POST":
@@ -29,7 +33,7 @@ def speakerEdit(request, pk):
             return redirect('speakerDetail', pk=speaker.pk)
     else:
         form = SpeakerForm(instance=speaker)
-    return render(request, 'speakers/speakerEdit.html', {'form': form})
+    return render(request, 'speakers/speakerEdit.html', {'form': form, 'list': objectsList})
 
 @login_required
 @permission_required('is_superuser', 'speakerList')

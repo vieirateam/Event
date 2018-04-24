@@ -28,8 +28,9 @@ def home(request):
 def pendencyList(request):
     if request.user.is_superuser:
         talksNotApproved = Talk.objects.filter(talkApproved=False)
-        return render(request, 'pendencyList.html', {'talks': talksNotApproved})
-    return redirect('eventList')
+        speakersNotApproved = Speaker.objects.filter(speakerApproved=False)
+        return render(request, 'pendencyList.html', {'talks': talksNotApproved, 'speakers': speakersNotApproved})
+    return redirect('home')
 
 def eventList(request):
     objectsList = allobjects.getAllObjects()

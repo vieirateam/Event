@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content %}
     <h2 class="w3-center">Lista de pendências</h2>
@@ -11,7 +12,6 @@
                     <li class="w3-bar">
                         <a href="{% url 'talkApprove' pk=talk.pk %}" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-check"></i></a>
                         <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-remove"></i></span>
-                        <!-- <img src="img_avatar2.png" class="w3-bar-item w3-circle w3-hide-small" style="width:85px"> -->
                         <div class="w3-bar-item">
                             <span class="w3-large">{{ talk.talkName }}</span><br>
                             <span>{{ talk.eventId.eventName }}</span>
@@ -22,6 +22,30 @@
                         <p>Não há pendências</p>
                     </li>
                 {% endfor %}
+            </ul>
+
+            <h4>Palestrantes a aprovar</h4>
+            <ul class="w3-ul w3-card-4">
+            	{% for speaker in speakers %}
+	            	<li class="w3-bar">
+                        <a href="{% url 'speakerApprove' pk=speaker.pk %}" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-check"></i></a>
+                        <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-remove"></i></span>
+                        
+                        {% if speaker.speakerImage.url != null %}
+	                        <img src="{{ speaker.speakerImage.url }}" alt="Boss" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
+	                    {% else %}
+	                        <img src="{% static 'images/speaker.png' %}" alt="Boss" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
+	                    {% endif %}
+                        
+                        <div class="w3-bar-item">
+                            <span class="w3-large">{{ speaker.speakerkName }}</span>
+                        </div>
+	                    </li>
+                {% empty %}
+                    <li class="w3-bar">
+                        <p>Não há pendências</p>
+                    </li>
+        	{% endfor %}
             </ul>
         </div>
     </div>
