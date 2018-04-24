@@ -13,7 +13,7 @@
 }
 
 .min-full-width {
-    min-width: 150px;
+    min-width: 182px;
 }
 
 .max-full-width {
@@ -56,4 +56,8 @@
 
 .link-decoration {
     text-decoration: none;
+}
+
+.p-display {
+    display: inline;
 }

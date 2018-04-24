@@ -22,7 +22,7 @@
     <div class="w3-row-padding  w3-center">
         <h2>Próximos Eventos</h2>
         <hr>
-        {% for event in events %}
+        {% for event in nextEvents %}
             <div class="w3-quarter w3-container w3-margin-bottom">
                 <div class="w3-card-4">
                     <a href="{% url 'eventDetail' pk=event.pk %}">
@@ -61,13 +61,9 @@
                     <textarea class="w3-input" name="message" type="text" placeholder="Mensagem" rows="10" cols="40" required></textarea>
                 </div>
 
-                <div class="w3-section w3-center">
-                    <div class="w3-half">
-                        <button type="reset" class="w3-button w3-grey w3-text-white almost-full">Limpar</button>
-                    </div>
-                    <div class="w3-half">
-                        <button class="w3-button w3-green w3-margin-bottom almost-full" type="submit">Enviar</button>
-                    </div>
+                <div class="w3-section">      
+                    <button type="reset" class="w3-button" style="width:49.5%">Limpar</button>
+                    <button class="w3-button w3-green" style="width:49.5%" type="submit">Enviar</button>
                 </div>
             </form>
         </div>

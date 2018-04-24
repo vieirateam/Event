@@ -57,3 +57,46 @@ function showDivs(n) {
 	x[slideIndex-1].style.display = "block";  
 	dots[slideIndex-1].className += " w3-white";
 }
+
+function showElement(element, elementClass) {
+    if (element.className.indexOf(elementClass) == -1) {
+        element.className += " " + elementClass;
+    } else { 
+        element.className = element.className.replace(" "+elementClass, "");
+    }
+}
+
+function search(element) {
+    showElement(element, "w3-show");
+    div_list = document.getElementById('div-list');
+    showElement(div_list, "w3-show");
+    element.focus();
+    searchButton = document.getElementById('search-button');
+    iconReplace = "";
+    iconRemove = "";
+    if (searchButton.className.indexOf("fa-search") == -1) {
+        iconRemove = " fa-remove";
+        iconReplace = " fa-search";
+    } else {
+        iconRemove = " fa-search";
+        iconReplace = " fa-remove";
+    }
+    searchButton.className = searchButton.className.replace(iconRemove, iconReplace);
+}
+
+function filterElement() {
+    var input, filter, list, listItems, i;
+    input = document.getElementById("search-bar");
+    filter = input.value.toUpperCase();
+    list = document.getElementById("list");
+    listItems = list.getElementsByTagName("li");
+    for(i = 0; i < listItems.length; i++) {
+        if(listItems[i]) {
+            if(listItems[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                listItems[i].style.display = "";
+            } else {
+                listItems[i].style.display = "none";
+            }
+        }
+    }
+}

@@ -58,22 +58,22 @@
                 <div class="w3-container w3-card-4 w3-margin">
                     <h4>Palestrante(s)</h4>
                     <hr class="w3-clear">
-                    {% for speaker in talk.speakerId.all %}
-                        <div class="w3-quarter w3-center min-full-width">
-                            <a href="{% url 'speakerDetail' pk=speaker.pk %}">
-                                {% if speaker.speakerImage.url != null %}
-                                    <img src="{{ speaker.speakerImage.url }}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.speakerName }}">
-                                {% else %}
-                                    <img src="{% static 'images/speaker.png' %}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.speakerName }}">
-                                {% endif %}
-                            </a>
-                            <h6 class="w3-opacity">
-                                {{ speaker.speakerName }}
-                            </h6>
-                        </div>
-                    {% empty %}
-                        <p>Não há palestrante!?</p>
-                    {% endfor %}
+                    <div class="w3-row">
+                        {% for speaker in talk.speakerId.all %}
+                            <div class="w3-quarter w3-center min-full-width w3-container">
+                                <a href="{% url 'speakerDetail' pk=speaker.pk %}" class="">
+                                    {% if speaker.speakerImage.url != null %}
+                                        <img src="{{ speaker.speakerImage.url }}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.speakerName }}">
+                                    {% else %}
+                                        <img src="{% static 'images/speaker.png' %}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.speakerName }}">
+                                    {% endif %}
+                                </a>
+                                <h6 class="w3-opacity">{{ speaker.speakerName }}</h6>
+                            </div>
+                        {% empty %}
+                            <p>Não há palestrante!?</p>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>

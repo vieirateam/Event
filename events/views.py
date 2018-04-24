@@ -1,15 +1,17 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.mail import send_mail, BadHeaderError
 from django.utils import timezone
 from .models import Event, Talk
 from speakers.models import Speaker
+from . import allobjects
 from .forms import EventForm, TalkForm, ContactForm
 
 def home(request):
     emailForm = ContactForm()
-    events = Event.objects.all().order_by('eventStartDate')[:4]
-    return render(request, 'index.html', {'events': events, 'form': emailForm}) 
+    objectsList = allobjects.getAllObjects()
+    nextEvents = Event.objects.all().order_by('eventStartDate')[:4]
+    return render(request, 'index.html', {'form': emailForm, 'list': objectsList, 'nextEvents': nextEvents}) 
 
 def pendencyList(request):
     if request.user.is_superuser:
@@ -18,59 +20,62 @@ def pendencyList(request):
     return redirect('eventList')
 
 def eventList(request):
-    events = Event.objects.all().order_by('eventStartDate')
-    return render(request, 'events/eventList.html', {'events': events})
+    objectsList = allobjects.getAllObjects()
+    events = objectsList[0]
+    return render(request, 'events/eventList.html', {'events': events, 'list': objectsList})
 
 def eventDetail(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    return render(request, 'events/eventDetail.html', {'event': event})
+    objectsList = allobjects.getAllObjects()
+    return render(request, 'events/eventDetail.html', {'event': event, 'list': objectsList})
 
 @login_required
+@permission_required('is_superuser', 'eventList')
 def eventNew(request):
-    if request.user.is_superuser:
-        if request.method == "POST":
-            form = EventForm(request.POST, request.FILES)
-            if form.is_valid():
-                event = form.save(commit=False)
-                event.save()
-                return redirect('eventDetail', pk=event.pk)
-        else:
-            form = EventForm()
-        return render(request, 'events/eventEdit.html', {'form': form})
+    if request.method == "POST":
+        form = EventForm(request.POST, request.FILES)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.save()
+            return redirect('eventDetail', pk=event.pk)
     else:
-        return redirect('eventList')
+        form = EventForm()
+        objectsList = allobjects.getAllObjects()
+    return render(request, 'events/eventEdit.html', {'form': form, 'list': objectsList})
 
 @login_required
+@permission_required('is_superuser', 'eventList')
 def eventEdit(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    if request.user.is_superuser:
-        if request.method == "POST":
-            form = EventForm(request.POST, request.FILES, instance=event)
-            if form.is_valid():
-                event = form.save(commit=False)
-                event.save()
-                return redirect('eventDetail', pk=event.pk)
-        else:
-            form = EventForm(instance=event)
-        return render(request, 'events/eventEdit.html', {'form': form, 'new': "Editar"})
+    objectsList = allobjects.getAllObjects()
+    if request.method == "POST":
+        form = EventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.save()
+            return redirect('eventDetail', pk=event.pk)
     else:
-        return redirect('eventList')
+        form = EventForm(instance=event)
+    return render(request, 'events/eventEdit.html', {'form': form, 'new': "Editar", 'list': objectsList})
 
 @login_required
+@permission_required('is_superuser', 'eventList')
 def eventRemove(request, pk):
     if request.user.is_superuser:
         event = get_object_or_404(Event, pk=pk)
         event.delete()
-
-    return redirect('eventList')
+        return redirect('eventList')
 
 def talkDetail(request, pk):
     talk = get_object_or_404(Talk, pk=pk)
+    objectsList = allobjects.getAllObjects()
     if talk.talkApproved or request.user.is_authenticated:
         userIsParticipant = False
-        if not request.user.is_superuser:
+        
+        if hasattr(request.user, 'speaker'):
             userIsParticipant = talk.speakerId.filter(id=request.user.speaker.id).exists()
-        return render(request, 'talks/talkDetail.html', {'talk': talk, 'userIsParticipant': userIsParticipant})
+        
+        return render(request, 'talks/talkDetail.html', {'talk': talk, 'userIsParticipant': userIsParticipant, 'list': objectsList})
     return redirect('eventDetail', pk=talk.eventId.pk)
 
 @login_required
@@ -83,17 +88,19 @@ def talkNew(request):
             form.save_m2m()
             return redirect('talkDetail', pk=talk.pk)
     else:
+        objectsList = allobjects.getAllObjects()
         events = Event.objects.all()
         speakers = Speaker.objects.filter(speakerApproved=True)
         form = TalkForm()
-    return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers})
+    return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'list': objectsList})
 
 @login_required
 def talkEdit(request, pk):
     talk = get_object_or_404(Talk, pk=pk)
+    objectsList = allobjects.getAllObjects()
     userIsParticipant = False
 
-    if not request.user.is_superuser:
+    if hasattr(request.user, 'speaker'):
         userIsParticipant = talk.speakerId.filter(id=request.user.speaker.id).exists()
 
     if userIsParticipant or request.user.is_superuser:
@@ -108,25 +115,22 @@ def talkEdit(request, pk):
             events = Event.objects.all()
             speakers = Speaker.objects.filter(speakerApproved=True)
             form = TalkForm(instance=talk)
-        return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'new': "Editar"})
+        return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'new': "Editar", 'list': objectsList})
     else:
         return redirect('talkDetail', pk=talk.pk)
 
 @login_required
+@permission_required('is_superuser', 'eventList')
 def talkRemove(request, pk):
     talk = get_object_or_404(Talk, pk=pk)
-    if request.user.is_superuser:
-        talk.delete()
-        return redirect('eventDetail', pk=talk.eventId.pk)
-    else:
-        return redirect('talkDetail', pk=talk.pk)
+    talk.delete()
+    return redirect('eventDetail', pk=talk.eventId.pk)
 
 @login_required
+@permission_required('is_superuser', 'eventList')
 def talkApprove(request, pk):
     talk = get_object_or_404(Talk, pk=pk)
-    if request.user.is_superuser:
-        talk.approve()
-
+    talk.approve()
     return redirect('talkDetail', pk=talk.pk)
 
 def contact(request):
@@ -144,4 +148,3 @@ def contact(request):
                 return HttpResponse("Erro =/")
         return redirect('home')
     return render(request, 'index.html', {'form': emailForm})
-
