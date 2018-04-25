@@ -114,7 +114,7 @@ def talkEdit(request, pk):
     userIsParticipant = False
 
     if hasattr(request.user, 'speaker'):
-        userIsParticipant = talk.speakerId.filter(id=request.user.speaker.id).exists()
+        userIsParticipant = talk.speakerId.filter(id=request.user.id).exists()
 
     if userIsParticipant or request.user.is_superuser:
         events = Event.objects.all()
