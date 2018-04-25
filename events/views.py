@@ -8,9 +8,9 @@ from . import allobjects
 from .forms import EventForm, TalkForm, ContactForm
 
 def home(request):
+    objectsList = allobjects.getAllObjects()
+    nextEvents = Event.objects.all().order_by('eventStartDate')[:4]
     if request.method == 'GET':
-        objectsList = allobjects.getAllObjects()
-        nextEvents = Event.objects.all().order_by('eventStartDate')[:4]
         emailForm = ContactForm()
     else:
         emailForm = ContactForm(request.POST)
@@ -45,6 +45,7 @@ def eventDetail(request, pk):
 @login_required
 @permission_required('is_superuser', 'eventList')
 def eventNew(request):
+    objectsList = allobjects.getAllObjects()
     if request.method == "POST":
         form = EventForm(request.POST, request.FILES)
         if form.is_valid():
@@ -53,7 +54,6 @@ def eventNew(request):
             return redirect('eventDetail', pk=event.pk)
     else:
         form = EventForm()
-        objectsList = allobjects.getAllObjects()
     return render(request, 'events/eventEdit.html', {'form': form, 'list': objectsList})
 
 @login_required
@@ -94,6 +94,8 @@ def talkDetail(request, pk):
 @login_required
 def talkNew(request):
     events = Event.objects.all()
+    objectsList = allobjects.getAllObjects()
+    speakers = Speaker.objects.filter(speakerApproved=True)
     if request.method == "POST":
         form = TalkForm(request.POST)
         if form.is_valid():
@@ -102,8 +104,6 @@ def talkNew(request):
             form.save_m2m()
             return redirect('talkDetail', pk=talk.pk)
     else:
-        objectsList = allobjects.getAllObjects()
-        speakers = Speaker.objects.filter(speakerApproved=True)
         form = TalkForm()
     return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'list': objectsList})
 
