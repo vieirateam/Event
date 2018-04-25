@@ -117,6 +117,8 @@ def talkEdit(request, pk):
         userIsParticipant = talk.speakerId.filter(id=request.user.speaker.id).exists()
 
     if userIsParticipant or request.user.is_superuser:
+        events = Event.objects.all()
+        speakers = Speaker.objects.filter(speakerApproved=True)
         if request.method == "POST":
             form = TalkForm(request.POST, instance=talk)
             if form.is_valid():
@@ -125,8 +127,6 @@ def talkEdit(request, pk):
                 form.save_m2m()
                 return redirect('talkDetail', pk=talk.pk)
         else:
-            events = Event.objects.all()
-            speakers = Speaker.objects.filter(speakerApproved=True)
             form = TalkForm(instance=talk)
         return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'new': "Editar", 'list': objectsList})
     else:
