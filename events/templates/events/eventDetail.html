@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="talk-container">
+        <div class="w3-row">
+            <div class="w3-quarter">
+                <div class="w3-card-4 w3-margin">
+                    {% if event.image.url != null %}   
+                        <img src="{{ event.image.url }}" alt="{{ event.name }}" title="{{ event.name }}" class="full-width">
+                    {% else %}
+                        <img src="{% static 'images/event.png' %}" alt="{{ event.name }}" title="{{ event.name }}" class="full-width">
+                    {% endif %} 
+                </div>
+            </div>
+
+            <div class="w3-twothird">
+                <div class="w3-container w3-card-4 w3-margin">
+                    <h4>
+                        {{ event.name }}
+                        {% if user.is_superuser %}
+                            <a href="{% url 'eventEdit' pk=event.pk %}"><i class="fa fa-pencil w3-right" title="Editar"></i></a>
+                            
+                            <i class="fa fa-trash w3-margin-right w3-right" title="Remover" onclick="document.getElementById('remove-dialog').style.display='block'"></i>
+                            <div id="remove-dialog" class="w3-modal">
+                                <div class="w3-modal-content w3-animate-zoom" style="max-width:600px">
+                                    <header class="w3-container"> 
+                                        <span onclick="document.getElementById('remove-dialog').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                                    </header>
+                                    <div class="w3-container">
+                                        <p>Tem certeza que deseja excluir o evento "{{ event.name }}"?</p>
+                                    </div>
+                                    <footer class="w3-container w3-padding-16">
+                                        <button class="w3-button w3-green w3-right" onclick="document.getElementById('remove-dialog').style.display='none'">Cancelar</button>
+                                        <a class="w3-button w3-right w3-margin-right w3-red" href="{% url 'eventRemove' pk=event.pk %}" title="Remover">Remover</a>
+                                    </footer>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </h4>
+                    <h6 class="w3-opacity">De {{ event.startDate }} a {{ event.finishDate }}</h6>
+                    <hr class="w3-clear">
+                    <p>{{ event.desc|linebreaksbr }}</p>
+                </div>
+
+                <div class="w3-container w3-card-4 w3-margin">
+                    {% for talk in event.talks.all %}
+                        {% if user.is_authenticated or talk.approved %}
+                            <a class="link-decoration" href="{% url 'talkDetail' pk=talk.pk %}"><h4>{{ talk.name }} &nbsp;<i class="fa fa-external-link"></i></h4></a>
+                            <h6 class="w3-opacity">{{ talk.date }}</h6>
+                            {% if not talk.approved %}
+                                <h6 class="w3-opacity w3-text-red">Aguardando aprovação.</h6>
+                            {% endif %}
+                        {% else %}
+                            <p>Esta palestra ainda não foi aprovada.</p>
+                        {% endif %}
+                    <hr class="w3-clear">
+                    {% empty %}
+                        <p>Não há palestras cadastradas para este evento.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

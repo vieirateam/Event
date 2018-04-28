@@ -1,17 +1,23 @@
 from django import forms
-from .models import Event, Talk
+from .models import Event, Talk, Speaker
 
 class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ('eventName', 'eventDesc', 'eventStartDate', 'eventFinishDate', 'eventImage', )
+        fields = ('name', 'desc', 'startDate', 'finishDate', 'image', )
+
+class SpeakerForm(forms.ModelForm):
+
+    class Meta:
+        model = Speaker
+        fields = ('name', 'email', 'formation', 'bio', 'image', )
 
 class TalkForm(forms.ModelForm):
 
 	class Meta:
 		model = Talk
-		fields = ('eventId', 'speakerId', 'talkName', 'talkType', 'talkDesc', 'talkMaxPeople', 'talkDate', 'talkStartTime', 'talkFinishTime', 'talkLocation', 'talkApproved', )
+		fields = ('event', 'speakers', 'name', 'category', 'desc', 'maxPeople', 'date', 'startTime', 'finishTime', 'location', 'approved', )
 
 class ContactForm(forms.Form):
 	email = forms.EmailField(required=True)

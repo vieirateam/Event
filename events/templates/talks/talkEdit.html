@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <h2 class="w3-center">{{ new|default:"Nova" }} Palestra</h2>
+    <hr>
+    <div class="w3-container">
+        <div class="w3-content" style="max-width: 800px">
+            <form method="POST" class="w3-white">
+                {% csrf_token %}
+                <div class="w3-section">
+                    <select class="w3-select" id="id_event" name="event" required autofocus>
+                        {% if not new %}
+                            <option value="" disabled selected>Selecione um evento</option>
+                        {% endif %}
+                        {% for event in events %}
+                            {% if event.id == form.event.value %}
+                                <option value="{{ forloop.counter }}" selected>
+                                    {{ event.name }}
+                                </option>
+                            {% else %}
+                                <option value="{{ forloop.counter }}">
+                                    {{ event.name }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="w3-section">
+                    <label for="id_speakers">Palestrante(s)</label>
+                    <select class="w3-input" id="id_speakers" name="speakers" multiple="multiple" required>
+                        {% for speaker in speakers %}
+                            {% if speaker.id in form.speakers.value %}
+                                <option value="{{ forloop.counter }}" selected>
+                                    {{ speaker.name }}
+                                </option>
+                            {% else %}
+                                <option value="{{ forloop.counter }}">
+                                    {{ speaker.name }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="w3-section">
+                    <input class="w3-input" type="text" id="id_name" name="name" value="{{ form.name.value|default_if_none:'' }}" placeholder="Nome da Palestra" maxlength="300" required />
+                </div>
+
+                <div class="w3-section">
+                    <textarea class="w3-input" type="text" id="id_desc" name="desc" placeholder="Descrição" rows="10" cols="40" required>{{ form.desc.value|default_if_none:'' }}</textarea>
+                </div>
+
+                <div class="w3-section">
+                    <input class="w3-input" type="text" id="id_location" name="location" value="{{ form.location.value|default_if_none:'' }}" placeholder="Local" required maxlength="300" />
+                </div>
+
+                <div class="w3-section">
+                    <div class="w3-half">
+                        <label for="id_category">Tipo</label>
+                        <input class="w3-input" type="text" id="id_category" name="category" value="{{ form.category.value|default_if_none:'' }}" maxlength="300" required autofocus />
+                    </div>
+                    <div class="w3-half">
+                        <label for="id_maxPeople">Vagas</label>
+                        <input class="w3-input" type="number" id="id_maxPeople" name="maxPeople" value="{{ form.maxPeople.value|default_if_none:'' }}" min="0" required />
+                    </div>
+                </div>
+
+                <div class="w3-section">
+                    <div class="w3-third">
+                        <label for="id_date">Data</label>
+                        <input class="w3-input" type="date" id="id_date" name="date" value="{{ form.date.value|date:'c'|default_if_none:'' }}" required />
+                    </div>
+                    <div class="w3-third">
+                        <label for="id_startDate">Horário Inicial:</label>
+                        <input class="w3-input" type="time" id="id_startDate" name="startTime" value="{{ form.startTime.value|default_if_none:'' }}" required />
+                    </div>
+                    <div class="w3-third">
+                        <label for="id_finishDate">Horário Final:</label>
+                        <input class="w3-input" type="time" id="id_finishDate" name="finishTime" value="{{ form.finishTime.value|default_if_none:'' }}" required />
+                    </div>
+                </div>
+
+                <div class="w3-section w3-center">
+                    {% if not new %}
+                        <div class="w3-half">
+                            <button type="reset" class="w3-button w3-light-grey w3-margin-top w3-margin-bottom almost-full">Limpar</button>
+                        </div>
+                        <div class="w3-half">
+                            <button class="w3-button w3-green w3-margin-bottom w3-margin-top almost-full" type="submit">Salvar</button>
+                        </div>
+                    {% else %}
+                        <button class="w3-button w3-green w3-margin-top" style="width: 60%" type="submit">Salvar</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

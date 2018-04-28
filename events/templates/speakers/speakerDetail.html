@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="talk-container">
+        <div class="w3-row">
+            <div class="w3-col m3">
+                <div class="w3-card-4 w3-margin">
+                    {% if speaker.image.url != null %}
+                        <img src="{{ speaker.image.url }}" alt="" class="full-width">
+                    {% else %}
+                        <img src="{% static 'images/speaker.png' %}" alt="" class="full-width">
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="w3-col m7">
+                <div class="w3-container w3-card-4 w3-margin">
+                    <h4>
+                        {{ speaker.name }}
+                        {% if user.is_authenticated and speaker.id == user.id %}
+                            <a href="{% url 'speakerEdit' pk=speaker.pk %}"><i class="fa fa-pencil w3-right" title="Editar"></i></a>
+                        {% endif %}
+
+                        {% if user.is_authenticated and user.is_superuser and speaker.approved == False %}
+
+                            <i class="fa fa-trash w3-margin-right w3-right" title="Remover" onclick="document.getElementById('remove-dialog').style.display='block'"></i>
+                            <div id="remove-dialog" class="w3-modal">
+                                <div class="w3-modal-content w3-animate-zoom" style="max-width:600px">
+                                    <header class="w3-container"> 
+                                        <span onclick="document.getElementById('remove-dialog').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                                    </header>
+                                    <div class="w3-container">
+                                        <p>Tem certeza que deseja excluir o palestrante "{{ speaker.name }}"?</p>
+                                    </div>
+                                    <footer class="w3-container w3-padding-16">
+                                        <button class="w3-button w3-green w3-right" onclick="document.getElementById('remove-dialog').style.display='none'">Cancelar</button>
+                                        <a class="w3-button w3-right w3-margin-right w3-red" href="{% url 'speakerRemove' pk=speaker.pk %}" title="Remover">Remover</a>
+                                    </footer>
+                                </div>
+                            </div>
+                            
+                            <a href="{% url 'speakerApprove' pk=speaker.pk %}"><i class="fa fa-check w3-right w3-margin-right" title="Aprovar"></i></a>
+                        {% endif%}
+                    </h4>
+                    <hr class="w3-clear">
+                    <p>{{ speaker.email }}</p>    
+                    <hr class="w3-clear">
+                    <p>{{ speaker.formation }}</p>    
+                    <hr class="w3-clear">
+                    <p>{{ speaker.bio|linebreaksbr }}</p>                
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

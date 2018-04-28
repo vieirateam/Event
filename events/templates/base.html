@@ -1,0 +1,107 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+   
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <title>IFSC Manage Eventos</title>
+    </head>
+    
+    <body>
+    	<!-- navigation -->
+
+		<div class="w3-bar w3-light-grey w3-border w3-large">
+            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large" href="javascript:void(0)" onclick="showElement(document.getElementById('sidebar'),'w3-show')"><i class="fa fa-bars"></i></a>
+            <a href="/" class="w3-bar-item w3-button w3-green" title="Home"><i class="fa fa-home"></i></a>
+            <a href="{% url 'eventList' %}" class="w3-bar-item w3-button w3-hide-small" title="Eventos">Eventos</a>
+            <a href="{% url 'speakerList' %}" class="w3-bar-item w3-button w3-hide-small" title="Palestrantes">Palestrantes</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="w3-bar-item w3-button w3-right w3-hide-small" title="Logout"><i class="fa fa-sign-out"></i> Logout</a>
+                
+                <div class="w3-dropdown-click w3-right">
+                    <button class="w3-button" title="Usuário" onclick="showElement(document.getElementById('user-menu'),'w3-show')"><i class="fa fa-user"></i><p class="w3-hide-small p-display"> {{ user.username }}</p></button>
+                    
+                    <div id="user-menu" class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0">
+                        {% if user.is_superuser %}
+                            <a href="{% url 'eventNew' %}" class="w3-bar-item w3-button" title="Novo Evento"><i class="fa fa-plus-square"></i> Novo Evento</a>
+                            <a href="{% url 'talkNew' %}" class="w3-bar-item w3-button" title="Novo Evento"><i class="fa fa-plus-square"></i> Nova Palestra</a>
+                            <a href="{% url 'pendencyList' %}" class="w3-bar-item w3-button" title="Lista de pendências"><i class="fa fa-warning"></i> Pendências</a>
+                        {% else %}
+                            <a href="{% url 'speakerDetail' user.id %}" class="w3-bar-item w3-button" title="{{ user.username }}"><i class=" fa fa-user-circle-o"></i> Perfil do Palestrante</a>
+                            <a href="{% url 'talkNew' %}" class="w3-bar-item w3-button" title="Novo Evento"><i class="fa fa-plus-square"></i> Nova Palestra</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+    			<a href="{% url 'login' %}" class="w3-bar-item w3-button w3-right" title="Login"><i class="fa fa-sign-in"></i><p class="w3-hide-small p-display">  Login</p></a>
+			{% endif %}
+            <button class="w3-bar-item w3-button w3-right" title="Pesquisar" onclick="search(document.getElementById('search-bar'))"><i id="search-button" class="fa fa-search"></i></button>
+
+            <div class="w3-dropdown-click w3-right">
+                <input id="search-bar" type="text" class=" w3-input w3-hide" placeholder="Pesquisar..." onkeyup="filterElement()">
+                
+                <div id="div-list" class="w3-dropdown-content w3-bar-block w3-border">
+                    <!-- list -->
+                    <ul id="list" class="w3-ul w3-hoverable">
+                        {% for event in list.0 %}
+                            <li><a href="{% url 'eventDetail' pk=event.pk %}" class="link-decoration">{{ event.name }}</a></li>
+                        {% endfor %}
+                        {% for talk in list.1 %}
+                            <li><a href="{% url 'talkDetail' pk=talk.pk %}" class="link-decoration">{{ talk.name }}</a></li>
+                        {% endfor %}
+                        {% for speaker in list.2 %}
+                            <li><a href="{% url 'speakerDetail' pk=speaker.pk %}" class="link-decoration">{{ speaker.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- sidebar -->
+        <div id="sidebar" class="w3-sidebar w3-bar-block w3-light-grey w3-hide w3-hide-large w3-hide-medium w3-animate-left w3-card" style="width:200px;z-index:5">
+            <a href="{% url 'eventList' %}" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-calendar-check-o"></i> &nbsp; Eventos</a>
+            {% if user.is_authenticated and not user.is_superuser %}
+                <a href="{% url 'talkNew' %}" class="w3-bar-item w3-button  w3-padding-large" title="Novo Evento"><i class="fa fa-calendar-plus-o"></i> &nbsp; Nova Palestra</a>
+            {% endif %}
+            <a href="{% url 'speakerList' %}" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-users"></i> &nbsp; Palestrantes</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="w3-bar-item w3-button w3-padding-large" title="Logout"><i class="fa fa-sign-out"></i> &nbsp;&nbsp; Logout</a>
+            {% endif %}
+        </div>
+
+        {% block content %}
+        {% endblock %}      
+		
+		<!-- footer -->
+		<footer class="w3-center w3-light-grey w3-border w3-large w3-padding-16">
+			<a href="" class="w3-button w3-green">
+				<i class="fa fa-arrow-up w3-margin-right"></i>Voltar ao topo
+			</a>
+            <div class="w3-section">
+                <a href="https://bitbucket.org/vieirateam/" target="_blank">
+                    <i class="fa fa-bitbucket w3-hover-opacity" style="font-size:25px"></i>
+                </a>
+                <a href="https://github.com/vieirateam" target="_blank">
+                    <i class="fa fa-github w3-hover-opacity" style="font-size:25px"></i>
+                </a>
+                <a href="https://www.ubuntu.com/" target="_blank">
+                    <i class="fa fa-linux w3-hover-opacity" style="font-size:25px"></i>
+                </a>
+                <a href="https://stackoverflow.com/" target="_blank">
+                    <i class="fa fa-stack-overflow w3-hover-opacity" style="font-size:25px"></i>
+                </a>
+                <a href="https://store.steampowered.com/" target="_blank">
+                    <i class="fa fa-steam-square w3-hover-opacity" style="font-size:25px"></i>
+                </a>
+            </div>
+			<p class="w3-medium">Desenvolvido por <a href="https://github.com/vieirateam" target="_blank">vieirateam</a></p>
+		</footer>  
+		
+        <script type="text/javascript" src="{% static 'js/global.js' %}"></script>
+    </body>
+</html>
