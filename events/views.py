@@ -11,7 +11,7 @@ from .forms import EventForm, TalkForm, ContactForm, SpeakerForm
 
 def home(request):
     objectsList = allobjects.getAllObjects()
-    nextEvents = Event.objects.all().order_by('startDate')[:4]
+    nextEvents = objectsList[0][:4]
     
     if request.method == 'GET':
         emailForm = ContactForm()
@@ -72,15 +72,14 @@ def eventEdit(request, pk):
             return redirect('eventDetail', pk=event.pk)
     else:
         form = EventForm(instance=event)
-    return render(request, 'events/eventEdit.html', {'form': form, 'new': "Editar", 'list': objectsList})
+    return render(request, 'events/eventEdit.html', {'form': form, 'edit': "Editar", 'list': objectsList})
 
 @login_required
 @permission_required('is_superuser', 'eventList')
 def eventRemove(request, pk):
-    if request.user.is_superuser:
-        event = get_object_or_404(Event, pk=pk)
-        event.delete()
-        return redirect('eventList')
+    event = get_object_or_404(Event, pk=pk)
+    event.delete()
+    return redirect('eventList')
 
 def speakerList(request):
     objectsList = allobjects.getAllObjects()
@@ -88,9 +87,11 @@ def speakerList(request):
     return render(request, 'speakers/speakerList.html', {'speakers': speakers, 'list': objectsList})
 
 def speakerDetail(request, pk):
-	speaker = get_object_or_404(Speaker, pk=pk)
-	objectsList = allobjects.getAllObjects()
-	return render(request, 'speakers/speakerDetail.html', {'speaker': speaker, 'list': objectsList})
+    speaker = get_object_or_404(Speaker, pk=pk)
+    if speaker.approved or request.user.is_authenticated:
+        objectsList = allobjects.getAllObjects()
+        return render(request, 'speakers/speakerDetail.html', {'speaker': speaker, 'list': objectsList})
+    return redirect('speakerList')
 
 @login_required
 def speakerEdit(request, pk):
@@ -131,26 +132,33 @@ def talkDetail(request, pk):
         userIsParticipant = False
         
         if hasattr(request.user, 'speaker'):
-            userIsParticipant = talk.speakerId.filter(id=request.user.speaker.id).exists()
+            userIsParticipant = talk.speakers.filter(id=request.user.speaker.id).exists()
         
         return render(request, 'talks/talkDetail.html', {'talk': talk, 'userIsParticipant': userIsParticipant, 'list': objectsList})
     return redirect('eventDetail', pk=talk.eventId.pk)
 
 @login_required
 def talkNew(request):
-    events = Event.objects.all()
-    objectsList = allobjects.getAllObjects()
-    speakers = Speaker.objects.filter(approved=True)
-    if request.method == "POST":
-        form = TalkForm(request.POST)
-        if form.is_valid():
-            talk = form.save(commit=False)
-            talk.save()
-            form.save_m2m()
-            return redirect('talkDetail', pk=talk.pk)
-    else:
-        form = TalkForm()
-    return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'list': objectsList})
+    permission = False
+    if hasattr(request.user, 'speaker'):
+        if request.user.speaker.approved:
+            permission = True
+
+    if permission or request.user.is_superuser:
+        events = Event.objects.all()
+        objectsList = allobjects.getAllObjects()
+        speakers = Speaker.objects.filter(approved=True)
+        if request.method == "POST":
+            form = TalkForm(request.POST)
+            if form.is_valid():
+                talk = form.save(commit=False)
+                talk.save()
+                form.save_m2m()
+                return redirect('talkDetail', pk=talk.pk)
+        else:
+            form = TalkForm()
+        return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'list': objectsList})
+    return redirect('home')
 
 @login_required
 def talkEdit(request, pk):
@@ -159,7 +167,7 @@ def talkEdit(request, pk):
     userIsParticipant = False
 
     if hasattr(request.user, 'speaker'):
-        userIsParticipant = talk.speakers.filter(id=request.user.id).exists()
+        userIsParticipant = talk.speakers.filter(id=request.user.speaker.id).exists()
 
     if userIsParticipant or request.user.is_superuser:
         events = Event.objects.all()
@@ -173,7 +181,7 @@ def talkEdit(request, pk):
                 return redirect('talkDetail', pk=talk.pk)
         else:
             form = TalkForm(instance=talk)
-        return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'new': "Editar", 'list': objectsList})
+        return render(request, 'talks/talkEdit.html', {'form': form, 'events':events, 'speakers':speakers, 'edit': "Editar", 'list': objectsList})
     else:
         return redirect('talkDetail', pk=talk.pk)
 
@@ -207,6 +215,3 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
-
-
-

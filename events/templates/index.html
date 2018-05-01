@@ -10,7 +10,7 @@
         <img class="mySlides w3-animate-opacity full-width" src="{% static 'images/img_chicago.jpg' %}">
         <img class="mySlides w3-animate-opacity full-width" src="{% static 'images/img_ny.jpg' %}">
 
-        <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
+        <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle full-width">
             <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
             <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
             <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(1)"></span>
@@ -44,7 +44,7 @@
     <!-- Contato -->
     <hr>
     <div class="w3-container w3-light-grey">
-        <div class="w3-content" style="max-width: 800px">
+        <div class="w3-content form-size">
             <form method="POST" class="w3-light-grey">
                 {% csrf_token %}
                 <h2 class="w3-center">Contato</h2>
@@ -72,5 +72,5 @@
             </form>
         </div>
     </div>
-
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 {% endblock %}

@@ -3,13 +3,13 @@
 }
 
 .w3-left, .w3-right, .w3-badge, .preview-image {
-	cursor:pointer
+    cursor:pointer
 }
 
 .w3-badge {
-	height:13px;
-	width:13px;
-	padding:0
+    height:13px;
+    width:13px;
+    padding:0
 }
 
 .min-full-width {
@@ -36,14 +36,21 @@
     width: 95%;
 }
 
-.talk-container {
+.button-size {
+    width: 60%;
+}
+
+.container {
     max-width: 1400px;
-    margin-top: 50px;
 }
 
 .img-speakers {
     width: 150px;
     height: 150px;
+}
+
+.speaker-icon-card {
+    max-width: 85px;
 }
 
 .img-events {
@@ -54,10 +61,46 @@
     height: 64px;
 }
 
+.map-height {
+    height: 500px;
+}
+
+.modal-dialog {
+    max-width: 600px;
+}
+
+.max-size {
+    max-height: 300px;
+}
+
+.form-size {
+    max-width: 800px;
+}
+
+.modal-max-size {
+    max-width: 200px;
+}
+
 .link-decoration {
     text-decoration: none;
 }
 
 .p-display {
     display: inline;
+}
+
+.none-display {
+    display: none;
+}
+
+.right-margin {
+    right: 0;
+}
+
+.five-index {
+    z-index: 5;
+}
+
+.icon-size {
+    font-size: 25px;
 }

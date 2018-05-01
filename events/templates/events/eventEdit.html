@@ -2,10 +2,10 @@
 {% load staticfiles %}
 
 {% block content %}
-    <h2 class="w3-center">{{ new|default:"Novo" }} Evento</h2>
-    <hr>
+    <h2 class="w3-center">{{ edit|default:"Novo" }} Evento</h2>
+    <hr class="w3-clear">
     <div class="w3-container">
-        <div class="w3-content" style="max-width: 800px">
+        <div class="w3-content form-size">
             <form method="POST" enctype="multipart/form-data" class="w3-white">
                 {% csrf_token %}
                 
@@ -20,31 +20,46 @@
                 <div class="w3-section">
                     <div class="w3-half">
                         <label>Data de Abertura</label>
-                        <input class="w3-input" type="date" id="id_startDate" name="startDate" value="{{ form.startDate.value|date:'c'|default_if_none:'' }}" required>
+                        <input class="w3-input" type="date" id="id_startDate" name="startDate" value="{{ form.startDate.value|date:'c' }}" 
+                        {% if not edit %}
+                            min="{% now 'Y-m-d' %}" 
+                        {% endif %}
+                        required>
                     </div>
                     <div class="w3-half">
                         <label>Data de Encerramento</label>
-                        <input class="w3-input" type="date" id="id_finishDate" name="finishDate" value="{{ form.finishDate.value|date:'c'|default_if_none:'' }}" required>
+                        <input class="w3-input" type="date" id="id_finishDate" name="finishDate" value="{{ form.finishDate.value|date:'c'|default_if_none:'' }}" min="{% now 'Y-m-d' %}" required>
+                    </div>
+                </div>
+
+                <input class="w3-hide" type="text" id="id_page" value="edit">
+                <input class="" type="text" id="id_latitude" name="latitude" value="-26.1667">
+                <input class="" type="text" id="id_longitude" name="longitude" value="-50.4">
+
+                <!-- <p class="w3-white">line-break</p> -->
+
+                <div class="w3-section">
+                    <div id="map" class="full-width map-height">
                     </div>
                 </div>
 
                 <div class="w3-section">
-                    <div class="w3-content w3-center" style="max-width: 200px">
-                        <div id="image-modal" class="w3-modal" onclick="this.style.display='none'">
+                    <div class="w3-content w3-center modal-max-size">
+                        <div id="image-modal" class="w3-modal" onclick="display('image-modal','none')">
                             <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
                             <div class="w3-modal-content w3-animate-zoom">
-                                <img id="event-image" class="full-width full-height">
+                                <img id="event-image" class="full-width">
                             </div>
                         </div>
 
                         {% if form.image.value.url != null %}
                             <img class="w3-hover-opacity w3-margin-top preview-image" src="{{ form.image.value.url }}" alt="{{ form.name.value }}" title="{{ form.name.value }}" onclick="onClick(this)">
                         {% else %}
-                            <img class="w3-hover-opacity w3-margin-top preview-image" src="{% static 'images/event.png' %}" class="full-width" onclick="onClick(this)">
+                            <img class="w3-hover-opacity w3-margin-top preview-image" src="{% static 'images/event.png' %}" onclick="onClick(this)">
                         {% endif %}
 
-                        <div id="alert-display" class="w3-panel w3-pale-red w3-display-container" style="display:none">
-                            <span onclick="this.parentElement.style.display='none'"
+                        <div id="alert-display" class="w3-panel w3-pale-red w3-display-container none-display">
+                            <span onclick="display('alert-display','none')"
                             class="w3-button w3-pale-red w3-large w3-display-topright">&times;</span>
                             <h3>Ops!</h3>
                             <p id="error"></p>
@@ -56,19 +71,24 @@
                 </div>
 
                 <div class="w3-section w3-center">
-                    {% if not new %}
+                    {% if edit %}
+                        <div class="w3-half">
+                            <a href="{% url 'eventList' %}" class="w3-button w3-light-grey almost-full">Cancelar</a>
+                        </div>
+                    {% else %}
                         <div class="w3-half">
                             <button type="reset" class="w3-button w3-light-grey almost-full">Limpar</button>
                         </div>
+                    {% endif %}
                         <div class="w3-half">
                             <button class="w3-button w3-green w3-margin-bottom almost-full" type="submit">Salvar</button>
                         </div>
-                    {% else %}
-                        <button class="w3-button w3-green" style="width: 60%" type="submit">Salvar</button>
-                    {% endif %}
                 </div>
             </form>
         </div>
     </div>
     <script type="text/javascript" src="{% static 'js/image-file.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/util.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/map.js' %}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJI9eUwg0WpwkeFIIs427YciIbXA9fmH0&callback=initMap"></script>
 {% endblock %}

@@ -3,24 +3,28 @@
 
 {% block content %}
     <h2 class="w3-center">Eventos</h2>
-    <hr>
-    <div class="w3-row-padding">
-        {% for event in events %}
-            <div class="w3-quarter w3-margin-bottom">
-                <div class="w3-card-4">
-                    <a href="{% url 'eventDetail' pk=event.pk %}">
-                        {% if event.image.url != null %}
-                           <img src="{{ event.image.url }}" alt="{{event.name}}" class="w3-hover-opacity img-events full-width" title="{{event.name}}">
-                       {% else %}
-                            <img src="{% static 'images/event.png' %}" alt="{{event.name}}" class="w3-hover-opacity img-events full-width" title="{{event.name}}">
-                       {% endif %}  
-                    </a>
-                    <div class="w3-container w3-center">
-                        <h3>{{ event.name }}</h3>
-                        <p>De {{ event.startDate }} a {{ event.finishDate }}</p>
+    <hr class="w3-clear">
+    {% for event in events %}
+        {% if forloop.first or forloop.counter|divisibleby:5 %}
+            <div class="w3-row-padding">
+        {% endif %}
+                <div class="w3-quarter w3-margin-bottom">
+                    <div class="w3-card-4">
+                        <a href="{% url 'eventDetail' pk=event.pk %}">
+                            {% if event.image.url != null %}
+                               <img src="{{event.image.url}}" alt="{{event.name}}" class="w3-hover-opacity img-events full-width" title="{{event.name}}">
+                           {% else %}
+                                <img src="{% static 'images/event.png' %}" alt="{{event.name}}" class="w3-hover-opacity img-events full-width" title="{{event.name}}">
+                           {% endif %}  
+                        </a>
+                        <div class="w3-container w3-center full-width">
+                            <h3>{{ event.name }}</h3>
+                            <p>De {{ event.startDate }} a {{ event.finishDate }}</p>
+                        </div>
                     </div>
                 </div>
+        {% if forloop.counter|divisibleby:4 or forloop.last %}
             </div>
-        {% endfor %}
-    </div>
+        {% endif %}
+    {% endfor %}
 {% endblock %}

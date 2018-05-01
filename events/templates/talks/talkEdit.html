@@ -2,15 +2,16 @@
 {% load staticfiles %}
 
 {% block content %}
-    <h2 class="w3-center">{{ new|default:"Nova" }} Palestra</h2>
-    <hr>
+    <h2 class="w3-center">{{ edit|default:"Nova" }} Palestra</h2>
+    <hr class="w3-clear">
     <div class="w3-container">
-        <div class="w3-content" style="max-width: 800px">
+        <div class="w3-content form-size">
             <form method="POST" class="w3-white">
                 {% csrf_token %}
+
                 <div class="w3-section">
                     <select class="w3-select" id="id_event" name="event" required autofocus>
-                        {% if not new %}
+                        {% if not edit %}
                             <option value="" disabled selected>Selecione um evento</option>
                         {% endif %}
                         {% for event in events %}
@@ -31,12 +32,12 @@
                     <label for="id_speakers">Palestrante(s)</label>
                     <select class="w3-input" id="id_speakers" name="speakers" multiple="multiple" required>
                         {% for speaker in speakers %}
-                            {% if speaker.id in form.speakers.value %}
-                                <option value="{{ forloop.counter }}" selected>
+                            {% if speaker.id in form.speakers.value or user.speaker.id == speaker.id %}
+                                <option value="{{ forloop.counter|add:'1' }}" selected>
                                     {{ speaker.name }}
                                 </option>
                             {% else %}
-                                <option value="{{ forloop.counter }}">
+                                <option value="{{ forloop.counter|add:'1' }}">
                                     {{ speaker.name }}
                                 </option>
                             {% endif %}
@@ -70,28 +71,35 @@
                 <div class="w3-section">
                     <div class="w3-third">
                         <label for="id_date">Data</label>
-                        <input class="w3-input" type="date" id="id_date" name="date" value="{{ form.date.value|date:'c'|default_if_none:'' }}" required />
+                        <input class="w3-input" type="date" id="id_date" name="date" value="{{ form.date.value|date:'c'|default_if_none:'' }}" min="{% now 'Y-m-d' %}" required />
                     </div>
                     <div class="w3-third">
                         <label for="id_startDate">Horário Inicial:</label>
-                        <input class="w3-input" type="time" id="id_startDate" name="startTime" value="{{ form.startTime.value|default_if_none:'' }}" required />
+                        <input class="w3-input" type="time" id="id_startDate" name="startTime" value="{{ form.startTime.value|default_if_none:'' }}" min="{% now 'H:i' %}" required />
                     </div>
                     <div class="w3-third">
                         <label for="id_finishDate">Horário Final:</label>
-                        <input class="w3-input" type="time" id="id_finishDate" name="finishTime" value="{{ form.finishTime.value|default_if_none:'' }}" required />
+                        <input class="w3-input" type="time" id="id_finishDate" name="finishTime" value="{{ form.finishTime.value|default_if_none:'' }}" min="{% now 'H:i' %}" required />
                     </div>
                 </div>
 
+                <p class="w3-text-white">line-break</p>
+
                 <div class="w3-section w3-center">
-                    {% if not new %}
+                    {% if not edit %}
                         <div class="w3-half">
-                            <button type="reset" class="w3-button w3-light-grey w3-margin-top w3-margin-bottom almost-full">Limpar</button>
+                            <button type="reset" class="w3-button w3-light-grey almost-full">Limpar</button>
                         </div>
                         <div class="w3-half">
-                            <button class="w3-button w3-green w3-margin-bottom w3-margin-top almost-full" type="submit">Salvar</button>
+                            <button class="w3-button w3-green w3-margin-bottom almost-full" type="submit">Salvar</button>
                         </div>
                     {% else %}
-                        <button class="w3-button w3-green w3-margin-top" style="width: 60%" type="submit">Salvar</button>
+                        <div class="w3-half">
+                            <a href="{% url 'eventDetail' pk=form.event.value %}" class="w3-button w3-light-grey almost-full">Cancelar</a>
+                        </div>
+                        <div class="w3-half">
+                            <button class="w3-button w3-green w3-margin-bottom almost-full" type="submit">Salvar</button>
+                        </div>
                     {% endif %}
                 </div>
             </form>
