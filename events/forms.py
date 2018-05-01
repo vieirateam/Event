@@ -5,7 +5,7 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ('name', 'desc', 'startDate', 'finishDate', 'image', )
+        fields = ('name', 'desc', 'startDate', 'finishDate', 'image', 'latitude', 'longitude' )
 
 class SpeakerForm(forms.ModelForm):
 

@@ -8,6 +8,8 @@ class Event(models.Model):
     startDate = models.DateField(default=timezone.now)
     finishDate = models.DateField()
     image = models.ImageField(blank=True, null=True)
+    latitude = models.CharField(max_length=50)
+    longitude = models.CharField(max_length=50)
 
     def approvedTalks(self):
         return self.talks.filter(approved=True)
@@ -53,6 +55,3 @@ class Talk(models.Model):
     def approve(self):
         self.approved = True
         self.save()
-
-
-

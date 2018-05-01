@@ -86,16 +86,16 @@
                 <p class="w3-text-white">line-break</p>
 
                 <div class="w3-section w3-center">
-                    {% if not edit %}
+                    {% if edit %}
                         <div class="w3-half">
-                            <button type="reset" class="w3-button w3-light-grey almost-full">Limpar</button>
+                            <a href="{% url 'eventDetail' pk=form.event.value %}" class="w3-button w3-light-grey almost-full">Cancelar</a>
                         </div>
                         <div class="w3-half">
                             <button class="w3-button w3-green w3-margin-bottom almost-full" type="submit">Salvar</button>
                         </div>
                     {% else %}
                         <div class="w3-half">
-                            <a href="{% url 'eventDetail' pk=form.event.value %}" class="w3-button w3-light-grey almost-full">Cancelar</a>
+                            <button type="reset" class="w3-button w3-light-grey almost-full">Limpar</button>
                         </div>
                         <div class="w3-half">
                             <button class="w3-button w3-green w3-margin-bottom almost-full" type="submit">Salvar</button>

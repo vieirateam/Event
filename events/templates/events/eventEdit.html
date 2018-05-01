@@ -32,11 +32,11 @@
                     </div>
                 </div>
 
-                <input class="w3-hide" type="text" id="id_page" value="edit">
-                <input class="" type="text" id="id_latitude" name="latitude" value="-26.1667">
-                <input class="" type="text" id="id_longitude" name="longitude" value="-50.4">
+                <input class="w3-hide" type="text" id="id_page" value="{{ edit|default:'new' }}">
+                <input class="w3-hide" type="text" id="id_latitude" name="latitude" value="{{ form.latitude.value|default_if_none:'-26.1667' }}" maxlength="50" required>
+                <input class="w3-hide" type="text" id="id_longitude" name="longitude" value="{{ form.longitude.value|default_if_none:'-50.4' }}" maxlength="50" required>
 
-                <!-- <p class="w3-white">line-break</p> -->
+                <p class="w3-text-white">line-break</p>
 
                 <div class="w3-section">
                     <div id="map" class="full-width map-height">

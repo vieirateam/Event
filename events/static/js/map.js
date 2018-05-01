@@ -11,8 +11,9 @@ function initMap() {
 
     var initialZoom = 7;
     var finalZoom = 13;
+    var content = "Canoinhas";
 
-    if(page.value == "detail") {
+    if(page.value == "detail" || page.value == "Editar") {
         initialZoom = 16;
         finalZoom = 16;
         content = 'Latitude: ' + inputLat.value + '<br>Longitude: ' + inputLng.value;
@@ -22,11 +23,10 @@ function initMap() {
     var mapOptions = {center: mapCenter, zoom: initialZoom};
     map = new google.maps.Map(mapCanvas, mapOptions);
 
-    if(page.value == "edit") {
+    if(page.value == "Editar" || page.value == "new") {
         google.maps.event.addListener(map, 'click', function(event) {
             placeMarker(event.latLng);
         });
-        var content = "Canoinhas";
     }
 
     addMarker(mapCenter);

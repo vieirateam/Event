@@ -6,3 +6,4 @@ myvenv
 venv
 media
 .DS_Store
+events/migrations
