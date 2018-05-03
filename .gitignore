@@ -7,3 +7,4 @@ venv
 media
 .DS_Store
 events/migrations
+mysite/settings.py
