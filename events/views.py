@@ -1,13 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.http import require_POST
+from django.http import HttpResponse, JsonResponse
 from django.core.mail import send_mail, BadHeaderError
 from django.utils import timezone
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from rest_framework.decorators import api_view
 from .models import Event, Talk, Speaker
 from . import allobjects
 from .forms import EventForm, TalkForm, ContactForm, SpeakerForm
+from .serializers import EventSerializer, SpeakerSerializer, TalkSerializer
 
 def home(request):
     objectsList = allobjects.getAllObjects()
@@ -40,10 +43,24 @@ def eventList(request):
     events = objectsList[0]
     return render(request, 'events/eventList.html', {'events': events, 'list': objectsList})
 
+@api_view(['GET'])
+def eventListJson(request):
+    if request.method == 'GET':
+        events = Event.objects.all().order_by('startDate')
+        serializer = EventSerializer(events, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
 def eventDetail(request, pk):
     event = get_object_or_404(Event, pk=pk)
     objectsList = allobjects.getAllObjects()
     return render(request, 'events/eventDetail.html', {'event': event, 'list': objectsList})
+
+@api_view(['GET'])
+def eventDetailJson(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    if request.method == 'GET':
+        serializer = EventSerializer(event)
+        return JsonResponse(serializer.data)
 
 @login_required
 @permission_required('is_superuser', 'eventList')
@@ -86,12 +103,27 @@ def speakerList(request):
     speakers = Speaker.objects.all().order_by('name')
     return render(request, 'speakers/speakerList.html', {'speakers': speakers, 'list': objectsList})
 
+@api_view(['GET'])
+def speakerListJson(request):
+    if request.method == 'GET':
+        speakers = Speaker.objects.filter(approved=True).order_by('name')
+        serializer = SpeakerSerializer(speakers, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
 def speakerDetail(request, pk):
     speaker = get_object_or_404(Speaker, pk=pk)
     if speaker.approved or request.user.is_authenticated:
         objectsList = allobjects.getAllObjects()
         return render(request, 'speakers/speakerDetail.html', {'speaker': speaker, 'list': objectsList})
     return redirect('speakerList')
+
+@api_view(['GET'])
+def speakerDetailJson(request, pk):
+    speaker = get_object_or_404(Speaker, pk=pk)
+    if speaker.approved:
+        if request.method == 'GET':
+            serializer = SpeakerSerializer(speaker)
+            return JsonResponse(serializer.data)
 
 @login_required
 def speakerEdit(request, pk):
@@ -136,6 +168,14 @@ def talkDetail(request, pk):
         
         return render(request, 'talks/talkDetail.html', {'talk': talk, 'userIsParticipant': userIsParticipant, 'list': objectsList})
     return redirect('eventDetail', pk=talk.eventId.pk)
+
+@api_view(['GET'])
+def talkDetailJson(request, pk):
+    talk = get_object_or_404(Talk, pk=pk)
+    if talk.approved:
+        if request.method == 'GET':
+            serializer = TalkSerializer(talk)
+            return JsonResponse(serializer.data)
 
 @login_required
 def talkNew(request):

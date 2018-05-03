@@ -40,7 +40,7 @@ class Speaker(models.Model):
 		return self.name
 
 class Talk(models.Model):
-    event = models.ForeignKey(Event, related_name="talks")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="talks")
     speakers = models.ManyToManyField(Speaker, related_name="speakers")
     name = models.CharField(max_length=300)
     category = models.CharField(max_length=300)

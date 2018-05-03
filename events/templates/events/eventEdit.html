@@ -24,7 +24,7 @@
                         {% if not edit %}
                             min="{% now 'Y-m-d' %}" 
                         {% endif %}
-                        required>
+                        required onchange="dateTimeFunction('id_startDate','id_finishDate');">
                     </div>
                     <div class="w3-half">
                         <label>Data de Encerramento</label>
@@ -90,5 +90,5 @@
     <script type="text/javascript" src="{% static 'js/image-file.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/util.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/map.js' %}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJI9eUwg0WpwkeFIIs427YciIbXA9fmH0&callback=initMap"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ8wc8fWGiLONaOa0krmKN1olA_qMxtnI&callback=initMap"></script>
 {% endblock %}

@@ -19,4 +19,9 @@ urlpatterns = [
     url(r'^talk/(?P<pk>\d+)/edit/$', views.talkEdit, name="talkEdit"),
     url(r'^talk/(?P<pk>\d+)/remove/$', views.talkRemove, name="talkRemove"),
     url(r'^talk/(?P<pk>\d+)/approve/$', views.talkApprove, name="talkApprove"),
+    url(r'^events/$', views.eventListJson, name="eventListJson"),
+    url(r'^events/(?P<pk>\d+)/$', views.eventDetailJson, name="eventDetailJson"),
+    url(r'^speakers/$', views.speakerListJson, name="speakerListJson"),
+    url(r'^speakers/(?P<pk>\d+)/$', views.speakerDetailJson, name="speakerDetailJson"),
+    url(r'^talks/(?P<pk>\d+)/$', views.talkDetailJson, name="talkDetailJson"),
 ]

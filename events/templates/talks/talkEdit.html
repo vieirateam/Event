@@ -10,17 +10,23 @@
                 {% csrf_token %}
 
                 <div class="w3-section">
-                    <select class="w3-select" id="id_event" name="event" required autofocus>
+                    <script type="text/javascript">
+                        var eventsList = [];
+                        {% for event in events %}
+                            eventsList.push(["{{ event.startDate|date:'c' }}","{{ event.finishDate|date:'c' }}"]);
+                        {% endfor %}
+                    </script>
+                    <select class="w3-select" id="id_event" name="event" required autofocus onchange="dateRange('id_event','id_date');">
                         {% if not edit %}
                             <option value="" disabled selected>Selecione um evento</option>
                         {% endif %}
                         {% for event in events %}
                             {% if event.id == form.event.value %}
-                                <option value="{{ forloop.counter }}" selected>
+                                <option value="{{ event.id }}" selected>
                                     {{ event.name }}
                                 </option>
                             {% else %}
-                                <option value="{{ forloop.counter }}">
+                                <option value="{{ event.id }}">
                                     {{ event.name }}
                                 </option>
                             {% endif %}
@@ -33,11 +39,11 @@
                     <select class="w3-input" id="id_speakers" name="speakers" multiple="multiple" required>
                         {% for speaker in speakers %}
                             {% if speaker.id in form.speakers.value or user.speaker.id == speaker.id %}
-                                <option value="{{ forloop.counter|add:'1' }}" selected>
+                                <option value="{{ speaker.id }}" selected>
                                     {{ speaker.name }}
                                 </option>
                             {% else %}
-                                <option value="{{ forloop.counter|add:'1' }}">
+                                <option value="{{ speaker.id }}">
                                     {{ speaker.name }}
                                 </option>
                             {% endif %}
@@ -71,15 +77,15 @@
                 <div class="w3-section">
                     <div class="w3-third">
                         <label for="id_date">Data</label>
-                        <input class="w3-input" type="date" id="id_date" name="date" value="{{ form.date.value|date:'c'|default_if_none:'' }}" min="{% now 'Y-m-d' %}" required />
+                        <input class="w3-input" type="date" id="id_date" name="date" value="{{ form.date.value|date:'c'|default_if_none:'' }}" required min="{% now 'Y-m-d' %}" onchange="timeFunction('id_date','id_startTime');" />
                     </div>
                     <div class="w3-third">
-                        <label for="id_startDate">Horário Inicial:</label>
-                        <input class="w3-input" type="time" id="id_startDate" name="startTime" value="{{ form.startTime.value|default_if_none:'' }}" min="{% now 'H:i' %}" required />
+                        <label for="id_startTime">Horário Inicial:</label>
+                        <input class="w3-input" type="time" id="id_startTime" name="startTime" value="{{ form.startTime.value|default_if_none:'' }}" min="{% now 'H:i' %}" required onchange="dateTimeFunction('id_startTime','id_finishTime');" />
                     </div>
                     <div class="w3-third">
-                        <label for="id_finishDate">Horário Final:</label>
-                        <input class="w3-input" type="time" id="id_finishDate" name="finishTime" value="{{ form.finishTime.value|default_if_none:'' }}" min="{% now 'H:i' %}" required />
+                        <label for="id_finishTime">Horário Final:</label>
+                        <input class="w3-input" type="time" id="id_finishTime" name="finishTime" value="{{ form.finishTime.value|default_if_none:'' }}" min="{% now 'H:i' %}" required />
                     </div>
                 </div>
 
@@ -105,4 +111,5 @@
             </form>
         </div>
     </div>
+    <script type="text/javascript" src="{% static 'js/util.js' %}"></script>
 {% endblock %}
