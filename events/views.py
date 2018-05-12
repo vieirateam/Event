@@ -177,6 +177,22 @@ def talkDetailJson(request, pk):
             serializer = TalkSerializer(talk)
             return JsonResponse(serializer.data)
 
+@api_view(['GET'])
+def talkListJson(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    talks = event.talks.filter(approved=True)
+    if request.method == 'GET':
+        serializer = TalkSerializer(talks, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def talkSpeakerJson(request, pk):
+    talk = get_object_or_404(Talk, pk=pk)
+    speakers = talk.speakers.all()
+    if request.method == 'GET':
+        serializer = SpeakerSerializer(speakers, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
 @login_required
 def talkNew(request):
     permission = False

@@ -39,3 +39,9 @@ function checkDateTime(dateTime) {
     }
     return dateTime;
 }
+
+function selectSpeaker() {
+    if(document.getElementById("speaker_id") != null) {
+        document.getElementById("speaker_id").selected = "selected";
+    }
+}

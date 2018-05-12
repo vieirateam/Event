@@ -36,10 +36,15 @@
 
                 <div class="w3-section">
                     <label for="id_speakers">Palestrante(s)</label>
-                    <select class="w3-input" id="id_speakers" name="speakers" multiple="multiple" required>
+                    <select class="w3-input" id="id_speakers" name="speakers" multiple="multiple" required onchange="selectSpeaker();">
                         {% for speaker in speakers %}
                             {% if speaker.id in form.speakers.value or user.speaker.id == speaker.id %}
-                                <option value="{{ speaker.id }}" selected>
+                                <option value="{{ speaker.id }}" selected
+                                    {% if user.speaker.id == speaker.id %}
+                                        id="speaker_id">
+                                    {% else %}
+                                        >
+                                    {% endif %}
                                     {{ speaker.name }}
                                 </option>
                             {% else %}
