@@ -14,7 +14,23 @@ from .serializers import EventSerializer, SpeakerSerializer, TalkSerializer
 
 def home(request):
     objectsList = allobjects.getAllObjects()
-    nextEvents = objectsList[0][:4]
+
+    date = timezone.localdate()
+    events = Event.objects.all().order_by('startDate')
+    
+    nowEvents = []
+    for event in events:
+        if(event.startDate <= date and event.finishDate >= date):
+            nowEvents.append(event)
+        if len(nowEvents) == 4:
+            break
+    
+    nextEvents = []
+    for event in events:
+        if(event.startDate > date):
+            nextEvents.append(event)
+        if len(nextEvents) == 4:
+            break
     
     if request.method == 'GET':
         emailForm = ContactForm()
@@ -29,7 +45,7 @@ def home(request):
             except BadHeaderError:
                 return HttpResponse("Erro =/")
         return redirect('home')
-    return render(request, 'index.html', {'form': emailForm, 'list': objectsList, 'nextEvents': nextEvents}) 
+    return render(request, 'index.html', {'form': emailForm, 'list': objectsList, 'nowEvents': nowEvents, 'nextEvents': nextEvents}) 
 
 def pendencyList(request):
     if request.user.is_superuser:
@@ -48,6 +64,33 @@ def eventListJson(request):
     if request.method == 'GET':
         events = Event.objects.all().order_by('startDate')
         serializer = EventSerializer(events, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def nowEventListJson(request):
+    if request.method == 'GET':
+        date = timezone.localdate()
+        events = Event.objects.all().order_by('startDate')
+        nowEvents = []
+        for event in events:
+            if(event.startDate <= date and event.finishDate >= date):
+                nowEvents.append(event)
+
+        serializer = EventSerializer(nowEvents, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def nextEventListJson(request):
+    if request.method == 'GET':
+        events = Event.objects.all().order_by('startDate')
+        nextEvents = []
+        for event in events:
+            if(event.startDate > timezone.localdate()):
+                nextEvents.append(event)
+            if len(nextEvents) == 5:
+                break
+
+        serializer = EventSerializer(nextEvents, many=True)
         return JsonResponse(serializer.data, safe=False)
 
 def eventDetail(request, pk):

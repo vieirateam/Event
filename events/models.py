@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 class Event(models.Model):
     name = models.CharField(max_length=300)
     desc = models.TextField()
-    startDate = models.DateField(default=timezone.now)
+    startDate = models.DateField(default=timezone.localdate)
     finishDate = models.DateField()
-    image = models.ImageField(blank=True, null=True)
+    image = models.ImageField(default="event.png")
     latitude = models.CharField(max_length=50)
     longitude = models.CharField(max_length=50)
 

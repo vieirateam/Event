@@ -6,7 +6,7 @@
     <hr class="w3-clear">
     <div class="w3-container w3-center">
         {% for speaker in speakers %}
-            {% if forloop.first or forloop.counter|divisibleby:5 %}
+            {% if forloop.counter|add:3|divisibleby:4 %}
                 <div class="w3-row">
             {% endif %}
                 {% if speaker.approved or user.is_superuser %}               

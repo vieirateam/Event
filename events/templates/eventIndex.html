@@ -1,0 +1,17 @@
+{% load staticfiles %}
+
+<div class="w3-quarter w3-container w3-margin-bottom">
+    <div class="w3-card-4">
+        <a href="{% url 'eventDetail' pk=event.pk %}">
+            {% if event.image.url != null %}
+               <img src="{{ event.image.url }}" alt="{{event.name}}" class="img-events full-width w3-hover-opacity" title="{{event.name}}">
+           {% else %}
+                <img src="{% static 'images/event.png' %}" alt="{{event.name}}" class="img-events full-width w3-hover-opacity" title="{{event.name}}">
+           {% endif %}    
+        </a>
+        <div class="w3-container w3-center">
+            <h3>{{ event.name }}</h3>
+            <p>De {{ event.startDate }} a {{ event.finishDate }}</p>
+        </div>
+    </div>
+</div>

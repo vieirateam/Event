@@ -5,7 +5,7 @@
     <h2 class="w3-center">Eventos</h2>
     <hr class="w3-clear">
     {% for event in events %}
-        {% if forloop.first or forloop.counter|divisibleby:5 %}
+        {% if forloop.counter|add:3|divisibleby:4 %}
             <div class="w3-row-padding">
         {% endif %}
                 <div class="w3-quarter w3-margin-bottom">
