@@ -153,6 +153,15 @@ def speakerListJson(request):
         serializer = SpeakerSerializer(speakers, many=True)
         return JsonResponse(serializer.data, safe=False)
 
+@api_view(['GET'])
+def speakerTalkJson(request, pk):
+    speaker = get_object_or_404(Speaker, pk=pk)
+    if speaker.approved:
+        if request.method == 'GET':
+            talks = speaker.speakers.filter(approved=True).order_by('date')
+            serializer = TalkSerializer(talks, many=True)
+            return JsonResponse(serializer.data, safe=False)
+
 def speakerDetail(request, pk):
     speaker = get_object_or_404(Speaker, pk=pk)
     if speaker.approved or request.user.is_authenticated:
@@ -223,16 +232,16 @@ def talkDetailJson(request, pk):
 @api_view(['GET'])
 def talkListJson(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    talks = event.talks.filter(approved=True)
     if request.method == 'GET':
+        talks = event.talks.filter(approved=True).order_by('date')
         serializer = TalkSerializer(talks, many=True)
         return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
 def talkSpeakerJson(request, pk):
     talk = get_object_or_404(Talk, pk=pk)
-    speakers = talk.speakers.all()
     if request.method == 'GET':
+        speakers = talk.speakers.filter(approved=True).order_by('name')
         serializer = SpeakerSerializer(speakers, many=True)
         return JsonResponse(serializer.data, safe=False)
 
