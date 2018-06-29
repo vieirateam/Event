@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
         <title>IFSC Manage Eventos</title>
     </head>
     
@@ -28,9 +29,9 @@
                     
                     <div id="user-menu" class="w3-dropdown-content w3-bar-block w3-card-4 right-margin">
                         {% if user.is_superuser %}
-                            <a href="{% url 'eventNew' %}" class="w3-bar-item w3-button" title="Novo Evento"><i class="fa fa-plus-square"></i> Novo Evento</a>
-                            <a href="{% url 'talkNew' %}" class="w3-bar-item w3-button" title="Novo Evento"><i class="fa fa-plus-square"></i> Nova Palestra</a>
-                            <a href="{% url 'pendencyList' %}" class="w3-bar-item w3-button" title="Lista de pendências"><i class="fa fa-warning"></i> Pendências</a>
+                            <a href="{% url 'eventNew' %}" class="w3-bar-item w3-button" title="Novo Evento"><i class=" fa fa-calendar-plus-o vt-font-size-icon_23"></i> Novo Evento</a>
+                            <a href="{% url 'talkNew' %}" class="w3-bar-item w3-button" title="Novo Evento"><i class="fa fa-plus-square vt-font-size-icon_23"></i> Nova Palestra</a>
+                            <a href="{% url 'pendencyList' %}" class="w3-bar-item w3-button" title="Lista de pendências"><span class="w3-badge vt-size-icon_23">9</span> Pendências</a>
                         {% else %}
                             <a href="{% url 'speakerDetail' user.id %}" class="w3-bar-item w3-button" title="{{ user.username }}"><i class=" fa fa-user-circle-o"></i> Perfil do Palestrante</a>
                             {% if user.speaker.approved %}
@@ -42,6 +43,7 @@
             {% else %}
     			<a href="{% url 'login' %}" class="w3-bar-item w3-button w3-right" title="Login"><i class="fa fa-sign-in"></i><p class="w3-hide-small p-display">  Login</p></a>
 			{% endif %}
+            
             <button class="w3-bar-item w3-button w3-right" title="Pesquisar" onclick="search('search-bar')"><i id="search-button" class="fa fa-search"></i></button>
 
             <div class="w3-dropdown-click w3-right">
@@ -104,6 +106,9 @@
 			<p class="w3-medium">Desenvolvido por <a href="https://github.com/vieirateam" target="_blank">vieirateam</a></p>
 		</footer>  
 		
+        <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/global.js' %}"></script>
     </body>
+    {% block js %}
+    {% endblock %}
 </html>

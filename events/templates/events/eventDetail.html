@@ -19,7 +19,7 @@
             <div class="w3-twothird">
                 <div class="w3-container w3-card-4 w3-margin-left w3-margin-right">
                     <h4>
-                        {{ event.name }}
+                        <div id="id_name">{{ event.name }}</div>
                         {% if user.is_superuser %}
                             <a href="{% url 'eventEdit' pk=event.pk %}"><i class="fa fa-pencil w3-right" title="Editar"></i></a>
                             
@@ -40,7 +40,7 @@
                             </div>
                         {% endif %}
                     </h4>
-                    <h6 class="w3-opacity">De {{ event.startDate }} a {{ event.finishDate }}</h6>
+                    <h6 id="id_event_date" class="w3-opacity">De {{ event.startDate }} a {{ event.finishDate }}</h6>
                     <hr class="w3-clear">
                     <p>{{ event.desc|linebreaksbr }}</p>
                 </div>
@@ -64,17 +64,19 @@
                     {% endfor %}
                 </div>
 
-                <input class="w3-hide" type="text" id="id_page" value="detail">
-                <input class="w3-hide" type="text" id="id_latitude" value="{{ event.latitude }}">
-                <input class="w3-hide" type="text" id="id_longitude" value="{{ event.longitude }}">
+                <input type="hidden" id="id_page" value="detail">
+                <input type="hidden" id="id_latitude" value="{{ event.latitude }}">
+                <input type="hidden" id="id_longitude" value="{{ event.longitude }}">
 
                 <div class="w3-card-4 w3-margin">
-                    <div id="map" class="full-width map-height">
-                    </div>
+                    <div id="map" class="full-width map-height"></div>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/util.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/map.js' %}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ8wc8fWGiLONaOa0krmKN1olA_qMxtnI&callback=initMap"></script>

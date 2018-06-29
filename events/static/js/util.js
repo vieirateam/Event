@@ -1,35 +1,38 @@
+"use strict"
+
 function display(element, value) {
-    document.getElementById(element).style.display=value;
+    $('#'+element).css('display',value);
 }
 
 function dateTimeFunction(initialElementId, lastElementId) {
-    var minValue = document.getElementById(initialElementId).value;
-    document.getElementById(lastElementId).min = minValue;
+    let minValue = $('#'+initialElementId).val();
+    $('#'+lastElementId).attr('min', minValue);
 }
 
 function dateRange(elementEventId,elementDateId) {
-    inputDate = document.getElementById(elementDateId);
-    eventOption = document.getElementById(elementEventId);
-    inputDate.min = eventsList[eventOption.selectedIndex-1][0];
-    inputDate.max = eventsList[eventOption.selectedIndex-1][1];
+    let eventOption = $('#'+elementEventId).attr('selectedIndex');
+    let value = eventsList[eventOption-1][0];
+    $('#'+elementDateId).attr('min', value);
+    value = eventsList[eventOption-1][1];
+    $('#'+elementDateId).attr('max', value);
 }
 
 function timeFunction(elementDateId, elementTimeId) {
-    inputDate = document.getElementById(elementDateId).value;
-    var date = new Date();
+    let inputDate = $('#'+elementDateId).val();
+    let date = new Date();
 
-    day = checkDateTime(date.getDate());
-    month = checkDateTime(date.getMonth() + 1);
-    hours = checkDateTime(date.getHours());
-    minutes = checkDateTime(date.getMinutes());
+    let day = checkDateTime(date.getDate());
+    let month = checkDateTime(date.getMonth() + 1);
+    let hours = checkDateTime(date.getHours());
+    let minutes = checkDateTime(date.getMinutes());
 
-    var currentDate = date.getFullYear() + "-" + month + "-" + day;
+    let currentDate = date.getFullYear() + "-" + month + "-" + day;
     
     if(inputDate == currentDate) {
-        var time = hours + ":" + minutes;
-        document.getElementById(elementTimeId).min = time;
+        let time = hours + ":" + minutes;
+        $('#'+elementTimeId).attr('min', time);
     } else {
-        document.getElementById(elementTimeId).min = "";
+        $('#'+elementTimeId).attr('min', "");
     }
 }
 
@@ -41,7 +44,7 @@ function checkDateTime(dateTime) {
 }
 
 function selectSpeaker() {
-    if(document.getElementById("speaker_id") != null) {
-        document.getElementById("speaker_id").selected = "selected";
+    if($("#speaker_id")[0] != null) {
+        $("#speaker_id").attr('selected', "selected");
     }
 }

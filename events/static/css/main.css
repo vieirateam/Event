@@ -1,3 +1,7 @@
+body *, p, input, a {
+    font-family: 'Nunito', sans-serif;
+}
+
 .mySlides {
     display:none
 }
@@ -6,10 +10,14 @@
     cursor:pointer
 }
 
-.w3-badge {
-    height:13px;
-    width:13px;
-    padding:0
+.vt-size-icon_23 {
+    height:23px;
+    width:23px;
+    padding:0;
+}
+
+.vt-font-size-icon_23 {
+    font-size: 22px;
 }
 
 .min-full-width {

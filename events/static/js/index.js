@@ -1,16 +1,18 @@
-var myIndex = 0;
-var slideIndex = 1;
+"use strict"
+
+let myIndex = 0;
+let slideIndex = 1;
 
 carousel();
 showDivs(slideIndex);
 
 function carousel() {
-    var i;
-    var x = document.getElementsByClassName("mySlides");
+    let i;
+    let x = $(".mySlides");
     
-    for (i = 0; i < x.length; i++) {
-       x[i].style.display = "none";  
-    }
+    x.each(function(index) {
+        $(this).hide();
+    });
     
     myIndex++;
     
@@ -18,7 +20,7 @@ function carousel() {
         myIndex = 1
     }
 
-    x[myIndex-1].style.display = "block";
+    $(".mySlides:eq("+myIndex+")").show();
     slideIndex = myIndex;  
     showDivs(slideIndex);
     setTimeout(carousel, 4000); 
@@ -35,9 +37,9 @@ function currentDiv(n) {
 }
 
 function showDivs(n) {
-    var i;
-    var x = document.getElementsByClassName("mySlides");
-    var dots = document.getElementsByClassName("demo");
+    let i;
+    let x = $(".mySlides");
+    let dots = $(".demo");
     
     if (n > x.length) {
         slideIndex = 1
@@ -45,15 +47,16 @@ function showDivs(n) {
     if (n < 1) {
         slideIndex = x.length
     }
+    slideIndex -= 1;
     
-    for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";  
-    }
+    x.each(function(index) {
+        $(this).hide();
+    });
     
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" w3-white", "");
-    }
+    dots.each(function(index) {
+        $(this).removeClass("w3-white");
+    })
     
-    x[slideIndex-1].style.display = "block";  
-    dots[slideIndex-1].className += " w3-white";
+    $(".mySlides:eq("+slideIndex+")").show();  
+    $(".demo:eq("+slideIndex+")").addClass("w3-white");
 }

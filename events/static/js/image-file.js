@@ -1,5 +1,7 @@
-var input = 0;
-var preview = 0;
+"use strict"
+
+let input = 0;
+let preview = 0;
 imgInput()
 
 function imgInput() {
@@ -10,11 +12,11 @@ function imgInput() {
 }
 
 function updateImageDisplay() {
-    var currentFiles = input.files;
+    let currentFiles = input.files;
 
     if(currentFiles.length !== 0) {
         if(validFileType(currentFiles[0])) {
-            var reader  = new FileReader();
+            let reader  = new FileReader();
 
             reader.addEventListener("load", function () {
                 preview.src = reader.result;
@@ -22,17 +24,17 @@ function updateImageDisplay() {
             
             reader.readAsDataURL(currentFiles[0]);
         } else {
-            document.getElementById("error").innerHTML = 'Imagem ' + currentFiles[0].name + ' não contém um tipo válido.';
-            document.getElementById("alert-display").style.display = "block";
+            $("#error").text('Imagem ' + currentFiles[0].name + ' não contém um tipo válido.');
+            $("#alert-display").show();
         }
     }
 }
 
 
 function validFileType(file) {
-    var fileTypes = ['image/jpg','image/jpeg','image/png'];
+    let fileTypes = ['image/jpg','image/jpeg','image/png'];
 
-    for(var i = 0; i < fileTypes.length; i++) {
+    for(let i = 0; i < fileTypes.length; i++) {
         if(file.type === fileTypes[i]) {
             return true;
         }
@@ -42,6 +44,6 @@ function validFileType(file) {
 }
 
 function onClick(element) {
-    document.getElementById("event-image").src = element.src;
-    document.getElementById("image-modal").style.display = "block";
+    $("#event-image").attr('src', element.src);
+    $("#image-modal").show();
 }

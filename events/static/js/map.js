@@ -1,71 +1,88 @@
-var map;
-var marker;
-var inputLat;
-var inputLng;
+"use strict"
+
+let map;
+let marker;
+let infowindow;
 
 function initMap() {
-    inputLat = document.getElementById("id_latitude");
-    inputLng = document.getElementById("id_longitude");
-    var page = document.getElementById("id_page");
-    var mapCanvas = document.getElementById("map");
+    let inputLat = $("#id_latitude").val();
+    let inputLng = $("#id_longitude").val();
+    let page = $("#id_page").val();
 
-    var initialZoom = 7;
-    var finalZoom = 13;
-    var content = "Canoinhas";
+    let initialZoom = 7;
+    let finalZoom = 13;
+    let content = "<h6 class='w3-center'>Canoinhas</h6>";
 
-    if(page.value == "detail" || page.value == "Editar") {
+    if(page == "detail" || page == "Editar") {
         initialZoom = 16;
         finalZoom = 16;
-        content = 'Latitude: ' + inputLat.value + '<br>Longitude: ' + inputLng.value;
+
+        if(page == "Editar") {
+            let title = $('#id_name').val();
+            content = "<h6 class='w3-center'>" + title + "</h6>";
+        } else {
+            let title = $('#id_name').text();
+            let date = $('#id_event_date').text();
+            content = "<h6 class='w3-center'>" + title + "</h6>" + "<p class='w3-center w3-opacity'>" + date + "</p>";
+        }
     }
 
-    var mapCenter = new google.maps.LatLng(inputLat.value,inputLng.value);
-    var mapOptions = {center: mapCenter, zoom: initialZoom};
-    map = new google.maps.Map(mapCanvas, mapOptions);
+    let mapCenter = new google.maps.LatLng(inputLat,inputLng);
+    setMap(mapCenter, initialZoom);
 
-    if(page.value == "Editar" || page.value == "new") {
+    if(page == "Editar" || page == "new") {
         google.maps.event.addListener(map, 'click', function(event) {
             placeMarker(event.latLng);
         });
     }
 
-    addMarker(mapCenter);
-
-    google.maps.event.addListener(marker,'click',function() {
-        mapZoom(marker.getPosition(),finalZoom);
-        addInfoWindow(content);
-    });
-
-    addInfoWindow(content);
+    setMarker(mapCenter);
+    setInfoWindow(content);
+    setInfoWindowListenter();
+    openInfoWindow();
 }
 
 function placeMarker(location) {
     mapZoom(location,16);
     marker.setMap(null);
-    addMarker(location);
+    setMarker(location);
 
-    var content = 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng();
-    addInfoWindow(content);
+    let content = '<h7>Latitude: ' + location.lat() + '</h7><br><h7>Longitude: ' + location.lng() + '</h7>';
+    setInfoWindow(content);
+    openInfoWindow();
 
-    google.maps.event.addListener(marker,'click',function() {
-        addInfoWindow(content);
-    });
+    setInfoWindowListenter();
 
-    inputLat.value = location.lat();
-    inputLng.value = location.lng();
+    $("#id_latitude").val(location.lat());
+    $("#id_longitude").val(location.lng());
 }
 
-function addMarker(location) {
+function setMap(location, zoom) {
+    let mapCanvas = $("#map")[0];
+    let mapOptions = {center: location, zoom: zoom};
+    map = new google.maps.Map(mapCanvas, mapOptions);
+}
+
+function setMarker(location) {
     marker = new google.maps.Marker({
         position: location,
         map: map
     });
 }
 
-function addInfoWindow(content) {
-    var infowindow = new google.maps.InfoWindow({
+function setInfoWindow(content) {
+    infowindow = new google.maps.InfoWindow({
         content: content
     });
+}
+
+function setInfoWindowListenter() {
+    google.maps.event.addListener(marker,'click',function() {
+        openInfoWindow();
+    });
+}
+
+function openInfoWindow() {
     infowindow.open(map,marker);
 }
 
