@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'^events/(?P<pk>\d+)/talks/$', views.talkListJson, name="talkListJson"),
     url(r'^talks/(?P<pk>\d+)/$', views.talkDetailJson, name="talkDetailJson"),
     url(r'^talks/(?P<pk>\d+)/speakers/$', views.talkSpeakerJson, name="talkSpeakerJson"),
+    url(r'^get/pendency/$', views.pendencyCount, name="pendencyCount"),
 ]

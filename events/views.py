@@ -54,6 +54,16 @@ def pendencyList(request):
         return render(request, 'pendencyList.html', {'talks': talksNotApproved, 'speakers': speakersNotApproved})
     return redirect('home')
 
+def pendencyCount(request):
+    if request.user.is_superuser:
+        talksNotApproved = Talk.objects.filter(approved=False).count()
+        speakersNotApproved = Speaker.objects.filter(approved=False).count()
+        number = talksNotApproved + speakersNotApproved
+        pendency_count = {
+            'number': number,
+        }
+        return JsonResponse(pendency_count)
+
 def eventList(request):
     objectsList = allobjects.getAllObjects()
     events = objectsList[0]

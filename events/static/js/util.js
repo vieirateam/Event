@@ -10,7 +10,7 @@ function dateTimeFunction(initialElementId, lastElementId) {
 }
 
 function dateRange(elementEventId,elementDateId) {
-    let eventOption = $('#'+elementEventId).attr('selectedIndex');
+    let eventOption = $('#'+elementEventId+' option:selected').val();
     let value = eventsList[eventOption-1][0];
     $('#'+elementDateId).attr('min', value);
     value = eventsList[eventOption-1][1];
