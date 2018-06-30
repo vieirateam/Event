@@ -50,8 +50,10 @@
                     <hr class="w3-clear">
                     {% for talk in event.talks.all %}
                         {% if user.is_authenticated or talk.approved %}
-                            <a class="link-decoration" href="{% url 'talkDetail' pk=talk.pk %}"><h5>{{ talk.name }} &nbsp;<i class="fa fa-external-link"></i></h5></a>
-                            <h6 class="w3-opacity">{{ talk.date }}</h6>
+                            <div class="w3-tooltip">
+                                <a class="link-decoration" href="{% url 'talkDetail' pk=talk.pk %}"><h5>{{ talk.name }} &nbsp;<i class="w3-text fa fa-external-link"></i></h5></a>
+                                <h6 class="w3-opacity">{{ talk.date }}</h6>
+                            </div>
                             {% if not talk.approved %}
                                 <h6 class="w3-opacity w3-text-red">Aguardando aprovação.</h6>
                             {% endif %}

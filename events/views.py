@@ -209,7 +209,7 @@ def speakerEdit(request, pk):
 def speakerApprove(request, pk):
     speaker = get_object_or_404(Speaker, pk=pk)
     speaker.approve()
-    return redirect('speakerDetail', pk=speaker.pk)
+    return JsonResponse({'status':1})
 
 @login_required
 @permission_required('is_superuser', 'speakerList')
@@ -315,7 +315,7 @@ def talkRemove(request, pk):
 def talkApprove(request, pk):
     talk = get_object_or_404(Talk, pk=pk)
     talk.approve()
-    return redirect('talkDetail', pk=talk.pk)
+    return JsonResponse({'status':1})
 
 def register(request):
     if request.method == 'POST':

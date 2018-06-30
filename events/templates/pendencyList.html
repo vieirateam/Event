@@ -10,7 +10,8 @@
             <ul class="w3-ul w3-card-4">
                 {% for talk in talks %}
                     <li class="w3-bar">
-                        <a href="{% url 'talkApprove' pk=talk.pk %}" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-check"></i></a>
+                        <input type="hidden" id="url_talk" data-url="{% url 'talkApprove' pk=talk.pk %}" />
+                        <i id="vt_talk_approve" class="fa fa-check w3-bar-item w3-button w3-white w3-xlarge w3-right"></i></a>
                         <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-remove"></i></span>
                         <div class="w3-bar-item">
                             <span class="w3-large">{{ talk.name }}</span><br>
@@ -28,7 +29,8 @@
             <ul class="w3-ul w3-card-4">
             	{% for speaker in speakers %}
 	            	<li class="w3-bar">
-                        <a href="{% url 'speakerApprove' pk=speaker.pk %}" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-check"></i></a>
+                        <input type="hidden" id="url_speaker" data-url="{% url 'speakerApprove' pk=speaker.pk %}" />
+                        <i id="vt_speaker_approve" class="fa fa-check w3-bar-item w3-button w3-white w3-xlarge w3-right"></i>
                         <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-remove"></i></span>
                         
                         {% if speaker.image.url != null %}
@@ -49,4 +51,8 @@
             </ul>
         </div>
     </div>
+{% endblock %}
+{% block js %}
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/ajax.js' %}"></script>
 {% endblock %}

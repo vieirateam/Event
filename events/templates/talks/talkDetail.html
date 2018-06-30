@@ -14,7 +14,9 @@
                         <img src="{% static 'images/event.png' %}" alt="{{ talk.event.name }}" title="{{ talk.event.name }}" class="full-width">
                     {% endif %}
                     <div class="w3-container">
-                        <p><a href="{% url 'eventDetail' pk=talk.event.pk %}" class="link-decoration"><i class="fa fa-calendar-o"></i> &nbsp; {{ talk.event.name }} &nbsp;<i class="fa fa-external-link"></i></a></p>
+                        <div class="w3-tooltip">
+                            <p><a href="{% url 'eventDetail' pk=talk.event.pk %}" class="link-decoration"><i class="fa fa-calendar-o"></i> &nbsp; {{ talk.event.name }} &nbsp;<i class="w3-text fa fa-external-link"></i></a></p>
+                        </div>
                         <p title="Tipo"><i class="fa fa-calendar-check-o"></i> &nbsp; {{ talk.category }}</p>
                         <p title="Vagas"><i class="fa fa-group"></i> &nbsp; {{ talk.maxPeople }} pessoas</p>
                         <p title="Local"><i class="fa fa-map"></i> &nbsp; {{ talk.location }}</p>
