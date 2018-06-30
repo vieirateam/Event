@@ -12,13 +12,19 @@
                 {% if speaker.approved or user.is_superuser %}               
                     <div class="w3-quarter">
                         <a href="{% url 'speakerDetail' pk=speaker.pk %}">
+                            <div class="w3-tooltip">
                             {% if speaker.image.url != null %}
-                                <img src="{{ speaker.image.url }}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.name }}">
+                                <img src="{{ speaker.image.url }}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity">
                             {% else %}
-                                <img src="{% static 'images/speaker.png' %}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity" title="{{ speaker.name }}">
+                                <img src="{% static 'images/speaker.png' %}" alt="Boss" class="img-speakers w3-circle w3-hover-opacity">
                             {% endif %}
+                                <h6 class="link-decoration">{{ speaker.name }}</h6>
+                                <span class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                                    Email: {{ speaker.email }}<br>
+                                    Formação: {{ speaker.formation }}  
+                                </span>
+                            </div>
                         </a>
-                        <h5>{{ speaker.name }}</h5>
                     </div>
                 {% endif%}
             {% if forloop.counter|divisibleby:4 or forloop.last %}
