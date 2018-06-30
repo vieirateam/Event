@@ -10,8 +10,8 @@
             <ul class="w3-ul w3-card-4">
                 {% for talk in talks %}
                     <li class="w3-bar">
-                        <input type="hidden" id="url_talk" data-url="{% url 'talkApprove' pk=talk.pk %}" />
-                        <i id="vt_talk_approve" class="fa fa-check w3-bar-item w3-button w3-white w3-xlarge w3-right"></i></a>
+                        <input type="hidden" class="url_talk" data-url="{% url 'talkApprove' pk=talk.pk %}" />
+                        <i class="vt_talk_approve fa fa-check w3-bar-item w3-button w3-white w3-xlarge w3-right"></i>
                         <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-remove"></i></span>
                         <div class="w3-bar-item">
                             <span class="w3-large">{{ talk.name }}</span><br>
@@ -29,8 +29,8 @@
             <ul class="w3-ul w3-card-4">
             	{% for speaker in speakers %}
 	            	<li class="w3-bar">
-                        <input type="hidden" id="url_speaker" data-url="{% url 'speakerApprove' pk=speaker.pk %}" />
-                        <i id="vt_speaker_approve" class="fa fa-check w3-bar-item w3-button w3-white w3-xlarge w3-right"></i>
+                        <input type="hidden" class="url_speaker" data-url="{% url 'speakerApprove' pk=speaker.pk %}" />
+                        <i class="vt_speaker_approve fa fa-check w3-bar-item w3-button w3-white w3-xlarge w3-right"></i>
                         <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right"><i class="fa fa-remove"></i></span>
                         
                         {% if speaker.image.url != null %}
