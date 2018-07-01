@@ -54,7 +54,7 @@ def pendencyList(request):
         return render(request, 'pendencyList.html', {'talks': talksNotApproved, 'speakers': speakersNotApproved})
     return redirect('home')
 
-def pendencyCount(request):
+def pendencyCountJson(request):
     if request.user.is_superuser:
         talksNotApproved = Talk.objects.filter(approved=False).count()
         speakersNotApproved = Speaker.objects.filter(approved=False).count()
