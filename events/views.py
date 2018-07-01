@@ -215,9 +215,11 @@ def speakerApprove(request, pk):
 @permission_required('is_superuser', 'speakerList')
 def speakerRemove(request, pk):
     speaker = get_object_or_404(Speaker, pk=pk)
-    speaker.user.delete()
-    speaker.delete()
-    return redirect('speakerList')  
+    
+    if(not speaker.approved):
+        speaker.user.delete()
+        speaker.delete()
+    return redirect('speakerList')
 
 def talkDetail(request, pk):
     talk = get_object_or_404(Talk, pk=pk)

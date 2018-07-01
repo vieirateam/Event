@@ -101,6 +101,10 @@ body *, p, input, a {
     display: none;
 }
 
+.vt-inline-block-display {
+    display: inline-block;
+}
+
 .right-margin {
     right: 0;
 }

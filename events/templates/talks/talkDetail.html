@@ -18,43 +18,42 @@
                             <p><a href="{% url 'eventDetail' pk=talk.event.pk %}" class="link-decoration"><i class="fa fa-calendar-o"></i> &nbsp; {{ talk.event.name }} &nbsp;<i class="w3-text fa fa-external-link"></i></a></p>
                         </div>
                         <p title="Tipo"><i class="fa fa-calendar-check-o"></i> &nbsp; {{ talk.category }}</p>
-                        <p title="Vagas"><i class="fa fa-group"></i> &nbsp; {{ talk.maxPeople }} pessoas</p>
-                        <p title="Local"><i class="fa fa-map"></i> &nbsp; {{ talk.location }}</p>
+                        <p title="Vagas"><i class="fa fa-group"></i> &nbsp; {{ talk.maxPeople }} vagas</p>
+                        <p title="Local"><i class="fa fa-map-marker"></i> &nbsp; {{ talk.location }}</p>
                     </div>
                 </div>
             </div>
 
             <div class="w3-twothird">
                 <div class="w3-container w3-card-4 w3-margin-left w3-margin-right">
-                    <h4>
-                        {{ talk.name }}
-                        {% if userIsParticipant or user.is_superuser %}
-                            <a href="{% url 'talkEdit' pk=talk.pk %}"><i class="fa fa-pencil w3-right" title="Editar"></i></a>
-                        {% endif %}
-                        
-                        {% if user.is_superuser %}
-                            <i class="fa fa-trash w3-margin-right w3-right" title="Remover" onclick="display('remove-dialog','block')"></i>
-                            <div id="remove-dialog" class="w3-modal">
-                                <div class="w3-modal-content w3-animate-zoom modal-dialog">
-                                    <header class="w3-container"> 
-                                        <span onclick="display('remove-dialog','none')" class="w3-button w3-display-topright">&times;</span>
-                                    </header>
-                                    <div class="w3-container">
-                                        <p>Tem certeza que deseja excluir {{ talk.category }} "{{ talk.name }}"?</p>
-                                    </div>
-                                    <footer class="w3-container w3-padding-16">
-                                        <button class="w3-button w3-green w3-right" onclick="display('remove-dialog','none')">Cancelar</button>
-                                        <a class="w3-button w3-right w3-margin-right w3-red" href="{% url 'talkRemove' pk=talk.pk %}" title="Remover">Remover</a>
-                                    </footer>
+                    <h4>{{ talk.name }}</h4>
+                    {% if userIsParticipant or user.is_superuser %}
+                        <a href="{% url 'talkEdit' pk=talk.pk %}" class="w3-button w3-right"><i class="fa fa-pencil" title="Editar"></i></a>
+                    {% endif %}
+                    
+                    {% if user.is_superuser %}
+                        <span id="vt_remove" class="w3-button w3-right"><i class="fa fa-trash" title="Remover"></i></span>
+                        <div id="vt_remove_dialog" class="w3-modal">
+                            <div class="w3-modal-content w3-animate-zoom modal-dialog">
+                                <header class="w3-container"> 
+                                    <span class="w3-button w3-display-topright vt_hide_dialog">&times;</span>
+                                </header>
+                                <div class="w3-container">
+                                    <p>Tem certeza que deseja excluir {{ talk.category }} "{{ talk.name }}"?</p>
                                 </div>
+                                <footer class="w3-container w3-padding-16">
+                                    <button class="w3-button w3-green w3-right vt_hide_dialog">Cancelar</button>
+                                    <a class="w3-button w3-right w3-margin-right w3-red" href="{% url 'talkRemove' pk=talk.pk %}" title="Remover">Remover</a>
+                                </footer>
                             </div>
-                            
-                            {% if not talk.approved %}
-                                <a href="{% url 'talkApprove' pk=talk.pk %}"><i class="fa fa-check w3-margin-right w3-right" title="Aprovar"></i></a>
-                            {% endif %}
+                        </div>
+                        
+                        {% if not talk.approved %}
+                            <input id="url_approve" type="hidden" data-url="{% url 'talkApprove' pk=talk.pk %}">
+                            <span id="vt_approve" class="w3-button w3-right"><i class="fa fa-check" title="Aprovar"></i></span>
                         {% endif %}
-                    </h4>
-                    <h6 class="w3-opacity">Em {{ talk.date }}, início às {{ talk.startTime }} e término às {{ talk.finishTime }}</h6>
+                    {% endif %}
+                    <h6 class="w3-opacity vt-inline-block-display">Em {{ talk.date }}, início às {{ talk.startTime }} e término às {{ talk.finishTime }}</h6>
                     <hr class="w3-clear">
                     <p>{{ talk.desc|linebreaksbr }}</p>
                 </div>
@@ -89,6 +88,6 @@
     </div>
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/util.js' %}"></script>
+    <script src="{% static 'js/approve.js' %}"></script>
+    <script src="{% static 'js/util.js' %}"></script>
 {% endblock %}
