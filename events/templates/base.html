@@ -32,7 +32,7 @@
                         {% if user.is_superuser %}
                             <a href="{% url 'eventNew' %}" class="w3-bar-item w3-button" title="Novo Evento"><i class=" fa fa-calendar-plus-o vt-font-size-icon_23"></i> Novo Evento</a>
                             <a href="{% url 'talkNew' %}" class="w3-bar-item w3-button" title="Novo Evento"><i class="fa fa-plus-square vt-font-size-icon_23"></i> Nova Palestra</a>
-                            <input type="hidden" id="url" data-url="{% url 'pendencyCount' %}" />
+                            <input type="hidden" id="url" data-url="{% url 'pendencyCountJson' %}" />
                             <a href="{% url 'pendencyList' %}" class="w3-bar-item w3-button" title="Lista de pendências"><span id="vt_badge" class="w3-badge vt-size-icon_23"></span> Pendências</a>
                         {% else %}
                             <a href="{% url 'speakerDetail' user.id %}" class="w3-bar-item w3-button" title="{{ user.username }}"><i class=" fa fa-user-circle-o"></i> Perfil do Palestrante</a>
