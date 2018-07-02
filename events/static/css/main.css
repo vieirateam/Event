@@ -6,7 +6,7 @@ body *, p, input, a {
     display:none
 }
 
-.w3-left, .w3-right, .w3-badge, .preview-image {
+.w3-left, .w3-right, .w3-badge, .preview-image, .vt-pointer {
     cursor:pointer
 }
 
@@ -87,6 +87,10 @@ body *, p, input, a {
 
 .modal-max-size {
     max-width: 200px;
+}
+
+.vt-max-width_500 {
+    max-width: 500px;
 }
 
 .link-decoration {

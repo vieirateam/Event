@@ -18,7 +18,7 @@
     	<!-- navigation -->
 
 		<div class="w3-bar w3-light-grey w3-border w3-large">
-            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large" href="javascript:void(0)" onclick="showElement('sidebar','w3-show')"><i class="fa fa-bars"></i></a>
+            <span id="vt_nav_menu" class="w3-bar-item w3-button w3-hide-medium w3-hide-large"><i class="fa fa-bars"></i></span>
             <a href="/" class="w3-bar-item w3-button w3-green" title="Home"><i class="fa fa-home"></i></a>
             <a href="{% url 'eventList' %}" class="w3-bar-item w3-button w3-hide-small" title="Eventos">Eventos</a>
             <a href="{% url 'speakerList' %}" class="w3-bar-item w3-button w3-hide-small" title="Palestrantes">Palestrantes</a>
@@ -46,32 +46,21 @@
     			<a href="{% url 'login' %}" class="w3-bar-item w3-button w3-right" title="Login"><i class="fa fa-sign-in"></i><p class="w3-hide-small p-display">  Login</p></a>
 			{% endif %}
             
-            <button class="w3-bar-item w3-button w3-right" title="Pesquisar" onclick="search('search-bar')"><i id="search-button" class="fa fa-search"></i></button>
+            <button id="vt_search_button" class="w3-bar-item w3-button w3-right" title="Pesquisar"><i id="search-button" class="fa fa-search"></i></button>
 
             <div class="w3-dropdown-click w3-right">
-                <input id="search-bar" type="text" class=" w3-input w3-hide" placeholder="Pesquisar..." onkeyup="filterElement()">
-                
-                <div id="div-list" class="w3-dropdown-content w3-bar-block w3-border">
-                    <!-- list -->
-                    <ul id="list" class="w3-ul w3-hoverable">
-                        {% for event in list.0 %}
-                            <a href="{% url 'eventDetail' pk=event.pk %}" class="link-decoration"><li>{{ event.name }}</li></a>
-                        {% endfor %}
-                        {% for talk in list.1 %}
-                            <a href="{% url 'talkDetail' pk=talk.pk %}" class="link-decoration"><li>{{ talk.name }}</li></a>
-                        {% endfor %}
-                        {% for speaker in list.2 %}
-                            <a href="{% url 'speakerDetail' pk=speaker.pk %}" class="link-decoration"><li>{{ speaker.name }}</li></a>
-                        {% endfor %}
-                    </ul>
+                <input id="vt_search_input" type="text" class="w3-input" placeholder="Pesquisar...">
+
+                <div id="vt_search_list" class="w3-dropdown-content w3-bar-block w3-border">
+                    <ul class="w3-ul w3-hoverable"></ul>
                 </div>
             </div>
         </div>
 
         <!-- sidebar -->
-        <div id="sidebar" class="w3-sidebar w3-bar-block w3-light-grey w3-hide w3-hide-large w3-hide-medium w3-animate-left w3-card modal-max-size five-index">
-            <a href="{% url 'eventList' %}" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-calendar-check-o"></i> &nbsp; Eventos</a>
-            {% if user.is_authenticated and not user.is_superuser %}
+        <div id="vt_sidebar" class="w3-sidebar w3-bar-block w3-light-grey w3-hide-large w3-hide-medium w3-animate-left w3-card modal-max-size five-index">
+            <a href="{% url 'eventList' %}" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-calendar"></i> &nbsp; Eventos</a>
+             {% if user.is_authenticated and not user.is_superuser %}
                 <a href="{% url 'talkNew' %}" class="w3-bar-item w3-button  w3-padding-large" title="Novo Evento"><i class="fa fa-calendar-plus-o"></i> &nbsp; Nova Palestra</a>
             {% endif %}
             <a href="{% url 'speakerList' %}" class="w3-bar-item w3-button w3-padding-large"><i class="fa fa-users"></i> &nbsp; Palestrantes</a>
@@ -79,6 +68,8 @@
                 <a href="{% url 'logout' %}" class="w3-bar-item w3-button w3-padding-large" title="Logout"><i class="fa fa-sign-out"></i> &nbsp;&nbsp; Logout</a>
             {% endif %}
         </div>
+
+        <div id="vt_overlay" class="w3-overlay w3-animate-opacity vt-pointer"></div>
 
         {% block content %}
         {% endblock %}
@@ -109,7 +100,6 @@
 		</footer>  
 		
         <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-        <script src="{% static 'js/global.js' %}"></script>
         <script src="{% static 'js/base.js' %}"></script>
     </body>
     {% block js %}

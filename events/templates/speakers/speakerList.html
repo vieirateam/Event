@@ -32,4 +32,6 @@
             {% endif %}
         {% endfor %}
     </div>
+    <input id="url_search" type="hidden" data-url="{% url 'speakerListJson' %}">
+    <input type="hidden" id="url_detail" data-url="{% url 'speakerDetail' pk=0 %}">
 {% endblock %}

@@ -57,6 +57,8 @@
             </ul>
         </div>
     </div>
+    <input id="url_search" type="hidden" data-url="{% url 'objectListJson'  %}">
+    <input type="hidden" id="url_detail" data-url="">
 {% endblock %}
 {% block js %}
     <script src="{% static 'js/pendency.js' %}"></script>

@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+	<h2 class="w3-center">Login</h2>
+	<hr class="w3-clear">
 	<div class="w3-container">
-		<div class="w3-content" style="max-width: 500px">
+		<div class="w3-content vt-max-width_500">
 			<form method="POST" action="{% url 'login' %}" class="w3-white">
 		        {% csrf_token %}
-		    	<h2 class="w3-center">Login</h2>
 
 		        <div class="w3-section">      
 				    <input class="w3-input" name="username" type="text" placeholder="Usuário" required autofocus>
@@ -37,4 +38,6 @@
 		  	</form>
 		</div>
 	</div>
+	<input id="url_search" type="hidden" data-url="{% url 'speakerListJson' %}">
+    <input type="hidden" id="url_detail" data-url="{% url 'speakerDetail' pk=0 %}">
 {% endblock %}

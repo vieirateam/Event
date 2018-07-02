@@ -70,8 +70,9 @@
             </form>
         </div>
     </div>
+    <input id="url_search" type="hidden" data-url="{% url 'objectListJson'  %}">
+    <input type="hidden" id="url_detail" data-url="">
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+    <script src="{% static 'js/index.js' %}"></script>
 {% endblock %}

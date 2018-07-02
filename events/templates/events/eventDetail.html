@@ -76,10 +76,11 @@
             </div>
         </div>
     </div>
+    <input id="url_search" type="hidden" data-url="{% url 'eventTalkListJson' pk=event.id  %}">
+    <input type="hidden" id="url_detail" data-url="{% url 'talkDetail' pk=0 %}">
 {% endblock %}
 {% block js %}
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/util.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/map.js' %}"></script>
+    <script src="{% static 'js/util.js' %}"></script>
+    <script src="{% static 'js/map.js' %}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ8wc8fWGiLONaOa0krmKN1olA_qMxtnI&callback=initMap"></script>
 {% endblock %}
