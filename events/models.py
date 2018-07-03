@@ -7,7 +7,7 @@ class Event(models.Model):
     desc = models.TextField()
     startDate = models.DateField(default=timezone.localdate)
     finishDate = models.DateField()
-    image = models.ImageField(default="event.png")
+    image = models.ImageField(blank=True, null=True)
     latitude = models.CharField(max_length=50)
     longitude = models.CharField(max_length=50)
 
