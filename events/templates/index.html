@@ -3,20 +3,14 @@
 
 {% block content %}
     
-    <!-- Slideshow div -->
+    <!-- show-slides div -->
 
     <div class="w3-content w3-display-container max-full-width">
-        <img class="mySlides w3-animate-opacity full-width" src="{% static 'images/img_la.jpg' %}">
-        <img class="mySlides w3-animate-opacity full-width" src="{% static 'images/img_chicago.jpg' %}">
-        <img class="mySlides w3-animate-opacity full-width" src="{% static 'images/img_ny.jpg' %}">
-
-        <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle full-width w3-hide-small">
-            <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
-            <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
-            <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(1)"></span>
-            <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(2)"></span>
-            <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(3)"></span>
-        </div>
+        <img class="show-slides w3-animate-opacity full-width" src="{% static 'images/img_la.jpg' %}">
+        <img class="show-slides w3-animate-opacity full-width" src="{% static 'images/img_chicago.jpg' %}">
+        <img class="show-slides w3-animate-opacity full-width" src="{% static 'images/img_ny.jpg' %}">
+        <button class="w3-button w3-black w3-display-left show-slides-buttons" onclick="plusDivs(-1)">&#10094;</button>
+        <button class="w3-button w3-black w3-display-right show-slides-buttons" onclick="plusDivs(+1)">&#10095;</button>
     </div>
 
     {% if nowEvents %}
