@@ -9,3 +9,6 @@ media
 events/migrations
 mysite/settings.py
 /.idea
+static
+cloud_sql_proxy
+requirements.txt
